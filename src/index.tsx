@@ -15,7 +15,7 @@ import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { Route, Router, Switch } from "react-router-dom"
 
-const history = createHistory()
+const history = createHistory({ basename: process.env.PUBLIC_URL })
 
 initializeIcons()
 
