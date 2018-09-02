@@ -1,0 +1,148 @@
+:root {
+  --green: #84dc2c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font: 12px/1.5em sans-serif;
+  background: #202020;
+}
+
+.App {
+  padding: 10px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.Title {
+  text-align: center;
+  font: 2rem/1.5em sans-serif;
+  margin-bottom: 10px;
+}
+
+.Title span {
+  vertical-align: super;
+  font-size: 1rem;
+  color: var(--green);
+}
+
+.HeaderButtons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.HeaderButtons > button {
+  margin: 5px 0 5px 10px;
+}
+
+.color {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  margin-left: 6px;
+  margin-top: 2px;
+}
+
+.keys {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.key {
+  padding: 2px 6px;
+  background: var(--green);
+  margin: 0 3px;
+  color: #202020;
+  font-weight: bold;
+  border-radius: 5px !important;
+}
+
+.RoomHeader {
+  display: flex;
+  align-items: center;
+}
+
+.RoomHeader button {
+  margin: 5px 0 10px 10px;
+}
+
+.RoomTitle {
+  flex: 1;
+  font-size: 1.5rem;
+  margin-left: 10px;
+}
+
+.Game {
+  position: absolute;
+  top: 80px;
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.GameSidebar {
+  min-width: 280px;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.GameContainer {
+  /* flex: 2; */
+  /* flex: 0 1 auto; */
+  width: 90vh;
+  min-width: 200px;
+  background: #101010;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.GameContainer:before {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.GameButtons {
+  display: flex;
+  flex-direction: column;
+}
+
+.GameButtons button {
+  margin-bottom: 10px;
+}
+
+.ms-DetailsRow-fields div:last-child {
+  text-align: right;
+}
+
+.ms-DetailsHeader .ms-DetailsHeader-cell:last-child .ms-DetailsHeader-cellTitle {
+  justify-content: flex-end;
+}
+
+.StatsTitle {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.StatsTitle b {
+  color: var(--green);
+}
+
+.Footer {
+  color: rgba(255, 255, 255, 0.25);
+  text-align: center;
+  padding: 10px;
+}
+
+button {
+  border-radius: 5px !important;
+}
