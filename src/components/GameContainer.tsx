@@ -1,29 +1,12 @@
 import * as PIXI from "pixi.js"
+import { Mesh } from "./pixi"
 import * as React from "react"
-import { Behavior, Container, CustomPIXIComponent, Stage } from "react-pixi-fiber"
+import { Container, Stage } from "react-pixi-fiber"
 import { connect } from "react-redux"
 
 import { ClientState, ClientTail } from "../client"
 
 PIXI.utils.skipHello()
-
-const TYPE = "Mesh"
-export const behavior: Behavior<{ vertices: Float32Array; uvs: Float32Array; indices: Uint16Array }, PIXI.mesh.Mesh> = {
-  customDisplayObject: ({ vertices, uvs, indices }) => new PIXI.mesh.Mesh(PIXI.Texture.WHITE, vertices, uvs, indices),
-  customApplyProps: function(mesh, oldProps, newProps) {
-    const { vertices, uvs, indices } = newProps
-
-    // mesh.texture = getTexture(texture)
-    mesh.vertices = vertices
-    mesh.uvs = uvs
-    mesh.indices = indices
-    mesh.dirty += 1
-    mesh.indexDirty += 1
-    mesh.refresh()
-    // mesh.updateTransform()
-  },
-}
-const Mesh = CustomPIXIComponent(behavior, TYPE)
 
 export const GameContainerAtom: React.SFC<Props> = ({ tails }) => (
   <div className="GameContainer">
