@@ -146,3 +146,39 @@ body {
 button {
   border-radius: 5px !important;
 }
+
+@media only screen and (max-width: 768px) {
+  .RoomHeader {
+    flex-direction: column;
+  }
+
+  .RoomTitle {
+    margin-left: 0;
+  }
+
+  .HeaderButtons {
+    margin-top: 10px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .HeaderButtons > button {
+    flex: 1 1 auto;
+  }
+
+  button .ms-Button-flexContainer {
+    align-items: center;
+  }
+
+  button .ms-Button-description {
+    display: none;
+  }
+
+  button .ms-Button-label {
+    margin-bottom: 0;
+  }
+
+  .HeaderButtons > button:last-child {
+    margin-right: 10px;
+  }
+}

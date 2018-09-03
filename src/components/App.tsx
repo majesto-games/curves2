@@ -35,24 +35,26 @@ export const App: React.SFC = () => (
           <>
             <div className="RoomHeader">
               <RoomTitle />
-              <CompoundButton
-                primary
-                iconProps={{ iconName: "DoubleChevronRight8" }}
-                text="Start game"
-                secondaryText="Start game"
-                onClick={() => history.push("/game/test")}
-              />
-              <CompoundButton
-                iconProps={{ iconName: "Settings" }}
-                text="Settings"
-                secondaryText="Configure game settings"
-              />
-              <CompoundButton
-                iconProps={{ iconName: "Leave" }}
-                text="Leave room"
-                secondaryText="Leave room"
-                onClick={() => history.push("/")}
-              />
+              <div className="HeaderButtons">
+                <CompoundButton
+                  primary
+                  iconProps={{ iconName: "DoubleChevronRight8" }}
+                  text="Start game"
+                  secondaryText="Start game"
+                  onClick={() => history.push("/game/test")}
+                />
+                <CompoundButton
+                  iconProps={{ iconName: "Settings" }}
+                  text="Settings"
+                  secondaryText="Configure game settings"
+                />
+                <CompoundButton
+                  iconProps={{ iconName: "Leave" }}
+                  text="Leave room"
+                  secondaryText="Leave room"
+                  onClick={() => history.push("/")}
+                />
+              </div>
             </div>
             <RoomPlayerList />
           </>
