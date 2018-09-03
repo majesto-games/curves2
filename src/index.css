@@ -96,16 +96,15 @@ body {
   flex-direction: column;
 }
 
-.GameContainer {
+.GameContainer canvas {
   /* flex: 2; */
   /* flex: 0 1 auto; */
   width: 90vh;
   min-width: 200px;
-  background: #101010;
   border: 1px solid rgba(255, 255, 255, 0.9);
 }
 
-.GameContainer:before {
+.GameContainer canvas:before {
   content: "";
   display: block;
   padding-bottom: 100%;

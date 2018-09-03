@@ -3,5 +3,6 @@
   "editor.formatOnSaveTimeout": 750,
   "typescriptHero.imports.organizeOnSave": true,
   "typescriptHero.imports.stringQuoteStyle": "\"",
-  "typescriptHero.imports.insertSemicolons": false
+  "typescriptHero.imports.insertSemicolons": false,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

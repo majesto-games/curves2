@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router"
 
 import { history } from ".."
 import { Footer } from "./Footer"
+import { GameContainer } from "./GameContainer"
 import { GamePlayerList } from "./GamePlayerList"
 import { HeaderButtons } from "./HeaderButtons"
 import { RoomList } from "./RoomList"
@@ -64,7 +65,7 @@ export const App: React.SFC = () => (
         path="/game/:roomName"
         render={() => (
           <div className="Game">
-            <div className="GameContainer" />
+            <GameContainer />
             <div className="GameSidebar">
               <div className="GameButtons">
                 <CompoundButton
