@@ -20,14 +20,14 @@ console.log(meshes)
 
 export type GameAction = ActionType<typeof actions>
 
-export type Mesh = {
+export type ClientMesh = {
   vertices: Float32Array
   uvs?: Float32Array
   indices: Uint16Array
 }
 
 export type ClientTail = {
-  meshes: Mesh[]
+  meshes: ClientMesh[]
 }
 
 export type ClientState = {
@@ -73,7 +73,7 @@ const reducer = (state: ClientState = initialState, action: GameAction) => {
     const newVertices = new Float32Array([l2x, l2y, h2x, h2y])
     const newIndices = new Uint16Array([lastMesh.indices.length, lastMesh.indices.length + 1])
 
-    const newMesh: Mesh = {
+    const newMesh: ClientMesh = {
       vertices: mergeFloat32(lastMesh.vertices, newVertices),
       indices: mergeUint16(lastMesh.indices, newIndices),
       uvs: lastMesh.uvs,
