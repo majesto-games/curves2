@@ -5,18 +5,17 @@ import { ActionType, getType } from "typesafe-actions"
 import * as actions from "./actions"
 import { mergeFloat32, mergeUint16 } from "./shared"
 
+// Temporary tail mesh data
 const state = require("./state.json")
 
-const meshes = state.tails
-
-meshes[0].vertices = new Float32Array(meshes[0].vertices)
-meshes[0].uvs = new Float32Array(meshes[0].uvs)
-meshes[0].indices = new Uint16Array(meshes[0].indices)
-meshes[1].vertices = new Float32Array(meshes[1].vertices)
-meshes[1].uvs = new Float32Array(meshes[1].uvs)
-meshes[1].indices = new Uint16Array(meshes[1].indices)
-
-console.log(meshes)
+// Rehydrate temporary tail mesh data
+const meshes = state.tails.map(
+  ({ vertices, uvs, indices }: { vertices: number[]; uvs: number[]; indices: number[] }) => ({
+    vertices: new Float32Array(vertices),
+    uvs: new Float32Array(uvs),
+    indices: new Uint16Array(indices),
+  }),
+)
 
 export type GameAction = ActionType<typeof actions>
 
