@@ -7,6 +7,7 @@ import { Footer } from "./Footer"
 import { GameContainer } from "./GameContainer"
 import { GamePlayerList } from "./GamePlayerList"
 import { HeaderButtons } from "./HeaderButtons"
+import { RoomButtons } from "./RoomButtons"
 import { RoomList } from "./RoomList"
 import { RoomPlayerList } from "./RoomPlayerList"
 import { RoomTitle } from "./RoomTitle"
@@ -36,26 +37,7 @@ export const App: React.SFC = () => (
           <>
             <div className="RoomHeader">
               <RoomTitle />
-              <div className="HeaderButtons">
-                <CompoundButton
-                  primary
-                  iconProps={{ iconName: "DoubleChevronRight8" }}
-                  text="Start game"
-                  secondaryText="Start game"
-                  onClick={() => history.push("/game/test")}
-                />
-                <CompoundButton
-                  iconProps={{ iconName: "Settings" }}
-                  text="Settings"
-                  secondaryText="Configure game settings"
-                />
-                <CompoundButton
-                  iconProps={{ iconName: "Leave" }}
-                  text="Leave room"
-                  secondaryText="Leave room"
-                  onClick={() => history.push("/")}
-                />
-              </div>
+              <RoomButtons />
             </div>
             <RoomPlayerList />
           </>

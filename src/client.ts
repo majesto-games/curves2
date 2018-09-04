@@ -29,20 +29,58 @@ export type ClientTail = {
   meshes: ClientMesh[]
 }
 
-export type ClientState = {
+type RoomState = {
+  name: string
+  isHost: boolean
   players: number[]
+}
+
+export type ClientState = {
+  room: RoomState
   tails: { [owner: number]: ClientTail }
 }
 
-const initialState: ClientState = {
+const initialRoomState: RoomState = {
+  name: "",
+  isHost: false,
   players: [],
+}
+
+const initialState: ClientState = {
+  room: initialRoomState,
   tails: [{ meshes }],
 }
 
 const reducer = (state: ClientState = initialState, action: GameAction) => {
   if (action.type === getType(actions.playerJoin)) {
     const { id } = action.payload
-    return { ...state, players: state.players.concat([id]) }
+
+    // TODO: This should be done more efficiently
+    if (state.room.players.indexOf(id) !== -1) {
+      return state
+    }
+
+    return { ...state, room: { ...state.room, players: state.room.players.concat([id]) } }
+  }
+
+  if (action.type === getType(actions.playerLeave)) {
+    const { id } = action.payload
+
+    return { ...state, room: { ...state.room, players: state.room.players.filter((pId) => pId !== id) } }
+  }
+
+  if (action.type === getType(actions.roomLeave)) {
+    return { ...state, room: initialRoomState }
+  }
+
+  if (action.type === getType(actions.roomJoin)) {
+    const { name } = action.payload
+
+    return { ...state, room: { ...state.room, name } }
+  }
+
+  if (action.type === getType(actions.isHost)) {
+    return { ...state, room: { ...state.room, isHost: true } }
   }
 
   if (action.type === getType(actions.addTail)) {

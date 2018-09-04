@@ -1,21 +1,27 @@
 import { ColumnActionsMode, DetailsList, SelectionMode } from "office-ui-fabric-react"
 import * as React from "react"
+import { connect } from "react-redux"
 
-export const RoomPlayerList: React.SFC = () => (
+import { ClientState } from "../client"
+
+function seededColor(input: number) {
+  // Input is a 32 bit uint, scale it to fit 360 degrees
+  const hue = (input * 360) / 4294967296
+  return "hsl(" + hue + ", 90%, 65%)"
+}
+
+type StateProps = {
+  state: ClientState
+}
+
+type OwnProps = {}
+
+type Props = StateProps & OwnProps
+
+export const RoomPlayerListAtom: React.SFC<Props> = ({ state }) => (
   <DetailsList
     selectionMode={SelectionMode.none}
-    items={[
-      {
-        name: "Player 1",
-        keys: 0,
-        color: "rgb(238, 255, 65)",
-      },
-      {
-        name: "Player 2",
-        keys: 1,
-        color: "rgb(124, 77, 255)",
-      },
-    ]}
+    items={state.room.players.map((p) => ({ name: p, keys: 0, color: seededColor(p) }))}
     columns={[
       {
         key: "c1",
@@ -56,3 +62,5 @@ export const RoomPlayerList: React.SFC = () => (
     ]}
   />
 )
+
+export const RoomPlayerList = connect<StateProps, {}, OwnProps>((state: ClientState) => ({ state }))(RoomPlayerListAtom)

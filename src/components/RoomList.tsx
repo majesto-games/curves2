@@ -1,7 +1,7 @@
 import { ColumnActionsMode, DefaultButton, DetailsList, SelectionMode } from "office-ui-fabric-react"
 import * as React from "react"
 
-import { history } from ".."
+import { group, history } from ".."
 
 export const RoomList: React.SFC = () => (
   <DetailsList
@@ -45,7 +45,10 @@ export const RoomList: React.SFC = () => (
             text="Join"
             size={20}
             iconProps={{ iconName: "DoubleChevronRight8" }}
-            onClick={() => history.push("/room/test")}
+            onClick={() => {
+              group.join("test")
+              history.push("/room/test")
+            }}
           />
         ),
       },

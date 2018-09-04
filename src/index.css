@@ -68,7 +68,7 @@ body {
   align-items: center;
 }
 
-.RoomHeader button {
+.HeaderButtons button {
   margin: 5px 0 10px 10px;
 }
 
@@ -76,6 +76,8 @@ body {
   flex: 1;
   font-size: 1.5rem;
   margin-left: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .Game {
