@@ -1,8 +1,12 @@
-import { CompoundButton } from "office-ui-fabric-react"
+import { CompoundButton, MessageBar } from "office-ui-fabric-react"
 import * as React from "react"
-import { Route, Switch } from "react-router"
+import { connect } from "react-redux"
+import { Route, RouteComponentProps, Switch, withRouter } from "react-router"
+import { CSSTransition, TransitionGroup } from "react-transition-group"
 
 import { history } from ".."
+import * as actions from "../actions"
+import { ClientState, Message } from "../client"
 import { Footer } from "./Footer"
 import { GameContainer } from "./GameContainer"
 import { GamePlayerList } from "./GamePlayerList"
@@ -14,8 +18,19 @@ import { RoomTitle } from "./RoomTitle"
 import { StatsTitle } from "./StatsTitle"
 import { Title } from "./Title"
 
-export const App: React.SFC = () => (
+export const AppAtom: React.SFC<Props> = ({ messages, dismissMessage }) => (
   <div className="App">
+    <div className="Messages">
+      <TransitionGroup component={null}>
+        {messages.map((message) => (
+          <CSSTransition key={message.text} classNames="fade" timeout={4000} onEntered={() => dismissMessage()}>
+            <MessageBar messageBarType={message.type} isMultiline={false}>
+              {message.text}
+            </MessageBar>
+          </CSSTransition>
+        ))}
+      </TransitionGroup>
+    </div>
     <Title />
     <Switch>
       <Route
@@ -70,4 +85,23 @@ export const App: React.SFC = () => (
     </Switch>
     <Footer />
   </div>
+)
+
+type Props = OwnProps & StateProps & DispatchProps
+
+type StateProps = {
+  messages: Message[]
+}
+type DispatchProps = {
+  dismissMessage: typeof actions.dismissMessage
+}
+type OwnProps = {} & RouteComponentProps<{}>
+
+export const App = withRouter(
+  connect<StateProps, DispatchProps, OwnProps>(
+    (state: ClientState) => ({
+      messages: state.messages,
+    }),
+    { dismissMessage: actions.dismissMessage },
+  )(AppAtom),
 )

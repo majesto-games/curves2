@@ -9,19 +9,21 @@ import { Provider } from "react-redux"
 import { Router } from "react-router-dom"
 import { AnyAction } from "redux"
 
+import * as actions from "./actions"
 import { store as clientStore } from "./client"
 import { App } from "./components/App"
 import { OnlineGroup } from "./connection"
-import { store as serverStore } from "./server"
 import { theme } from "./theme"
 
 // serverStore.dispatch(actions.playerJoin(0))
 
 export const group = new OnlineGroup(<T extends AnyAction>(action: T) => {
   clientStore.dispatch(action)
-  serverStore.dispatch(action)
+  // serverStore.dispatch(action)
   return action
 })
+
+window.addEventListener("offline", () => clientStore.dispatch(actions.disconnected("offline")))
 
 export const history = createHistory()
 

@@ -1,8 +1,11 @@
+import { MessageBarType } from "office-ui-fabric-react"
 import { applyMiddleware, createStore } from "redux"
 import { createLogger } from "redux-logger"
+import { createEpicMiddleware } from "redux-observable"
 import { ActionType, getType } from "typesafe-actions"
 
 import * as actions from "./actions"
+import { rootEpic } from "./epics"
 import { mergeFloat32, mergeUint16 } from "./shared"
 
 // Temporary tail mesh data
@@ -35,9 +38,12 @@ type RoomState = {
   players: number[]
 }
 
+export type Message = { type: MessageBarType; text: string }
+
 export type ClientState = {
   room: RoomState
   tails: { [owner: number]: ClientTail }
+  messages: Message[]
 }
 
 const initialRoomState: RoomState = {
@@ -49,6 +55,7 @@ const initialRoomState: RoomState = {
 const initialState: ClientState = {
   room: initialRoomState,
   tails: [{ meshes }],
+  messages: [],
 }
 
 const reducer = (state: ClientState = initialState, action: GameAction) => {
@@ -74,13 +81,17 @@ const reducer = (state: ClientState = initialState, action: GameAction) => {
   }
 
   if (action.type === getType(actions.roomJoin)) {
-    const { name } = action.payload
+    const { name, isHost } = action.payload
 
-    return { ...state, room: { ...state.room, name } }
+    return { ...state, room: { ...state.room, name, isHost } }
   }
 
-  if (action.type === getType(actions.isHost)) {
-    return { ...state, room: { ...state.room, isHost: true } }
+  if (action.type === getType(actions.showMessage)) {
+    return { ...state, messages: state.messages.concat([action.payload]) }
+  }
+
+  if (action.type === getType(actions.dismissMessage)) {
+    return { ...state, messages: state.messages.slice(1) }
   }
 
   if (action.type === getType(actions.addTail)) {
@@ -128,4 +139,8 @@ const reducer = (state: ClientState = initialState, action: GameAction) => {
   return state
 }
 
-export const store = createStore(reducer, applyMiddleware(createLogger({ collapsed: true })))
+const epicMiddleware = createEpicMiddleware()
+
+export const store = createStore(reducer, applyMiddleware(createLogger({ collapsed: true }), epicMiddleware))
+
+epicMiddleware.run(rootEpic)

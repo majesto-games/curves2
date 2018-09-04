@@ -5,8 +5,8 @@ import { connect } from "react-redux"
 import { ClientState } from "../client"
 
 function seededColor(input: number) {
-  // Input is a 32 bit uint, scale it to fit 360 degrees
-  const hue = (input * 360) / 4294967296
+  // Input is a 32 bit uint, apply modulus it to fit 360 degrees
+  const hue = input % 360
   return "hsl(" + hue + ", 90%, 65%)"
 }
 
