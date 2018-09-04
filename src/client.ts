@@ -22,7 +22,7 @@ export type GameAction = ActionType<typeof actions>
 
 export type ClientMesh = {
   vertices: Float32Array
-  uvs?: Float32Array
+  uvs: Float32Array
   indices: Uint16Array
 }
 
@@ -66,6 +66,7 @@ const reducer = (state: ClientState = initialState, action: GameAction) => {
     if (!lastMesh) {
       lastMesh = {
         vertices: new Float32Array([l1x, l1y, h1x, h1y]),
+        uvs: new Float32Array([]), // TODO: I guess this should not be empty
         indices: new Uint16Array([0, 1]),
       }
     }
