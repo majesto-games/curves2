@@ -5,7 +5,7 @@ import { createEpicMiddleware } from "redux-observable"
 import { ActionType, getType } from "typesafe-actions"
 
 import * as actions from "./actions"
-import { ConnectionGroup, OnlineGroup } from "./connection"
+import { LocalGroup, OnlineGroup } from "./connection"
 import { rootEpic } from "./epics"
 import { mergeFloat32, mergeUint16 } from "./shared"
 
@@ -34,10 +34,10 @@ export type ClientTail = {
 }
 
 export type RoomState = {
-  name: string
+  name: string | null
   isHost: boolean
   players: number[]
-  group: { online: boolean; instance: ConnectionGroup } | null
+  group: { online: true; instance: OnlineGroup } | { online: false; instance: LocalGroup } | null
 }
 
 export type Message = { type: MessageBarType; text: string }
@@ -49,7 +49,7 @@ export type ClientState = {
 }
 
 const initialRoomState: RoomState = {
-  name: "",
+  name: null,
   isHost: false,
   players: [],
   group: null,
@@ -79,9 +79,8 @@ const reducer = (state: ClientState = initialState, action: GameAction): ClientS
     return { ...state, room: { ...state.room, players: state.room.players.filter((pId) => pId !== id) } }
   }
 
-  if (action.type === getType(actions.leaveRoom)) {
-    const { name, isHost, players } = initialRoomState
-    return { ...state, room: { ...state.room, name, isHost, players } }
+  if (action.type === getType(actions.leaveRoom) || action.type === getType(actions.createOnlineRoom)) {
+    return { ...state, room: initialRoomState }
   }
 
   if (action.type === getType(actions.joinOnlineRoom)) {
@@ -98,7 +97,7 @@ const reducer = (state: ClientState = initialState, action: GameAction): ClientS
     return { ...state, messages: state.messages.slice(1) }
   }
 
-  if (action.type === getType(actions.createOnlineRoom)) {
+  if (action.type === getType(actions.createdOnlineRoom)) {
     const { name } = action.payload
 
     return { ...state, room: { ...state.room, name, isHost: true, players: [] } }
@@ -108,12 +107,16 @@ const reducer = (state: ClientState = initialState, action: GameAction): ClientS
     return { ...state, room: { ...state.room, name: "", isHost: true, players: [] } }
   }
 
-  if (action.type === getType(actions.createGroup)) {
+  if (action.type === getType(actions.createOnlineGroup)) {
     const { instance } = action.payload
 
-    const online = instance instanceof OnlineGroup
+    return { ...state, room: { ...state.room, group: { online: true, instance } } }
+  }
 
-    return { ...state, room: { ...state.room, group: { online, instance } } }
+  if (action.type === getType(actions.createLocalGroup)) {
+    const { instance } = action.payload
+
+    return { ...state, room: { ...state.room, group: { online: false, instance } } }
   }
 
   if (action.type === getType(actions.addTail)) {
@@ -166,3 +169,6 @@ const epicMiddleware = createEpicMiddleware()
 export const store = createStore(reducer, applyMiddleware(createLogger({ collapsed: true }), epicMiddleware))
 
 epicMiddleware.run(rootEpic)
+
+export const isLoading = (state: ClientState) =>
+  state.room.name === null && (state.room.group !== null && state.room.group.online)

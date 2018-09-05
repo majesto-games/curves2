@@ -26,10 +26,13 @@ export class RoomTitleAtom extends React.Component<Props, State> {
   render() {
     const { room } = this.props
 
+    const name = room.name
+
     return (
       <div className="RoomTitle">
         {room.group &&
-          room.group.online && (
+          room.group.online &&
+          name && (
             <>
               <span>{room.name}</span>
               <TooltipHost
@@ -39,7 +42,7 @@ export class RoomTitleAtom extends React.Component<Props, State> {
                 <ActionButton
                   iconProps={{ iconName: "Copy", styles: { root: { color: theme.palette.bodyText } } }}
                   onClick={() => {
-                    Clipboard.copy(room.name)
+                    Clipboard.copy(name)
                     this.setState({ clipboardButtonClicked: true })
                   }}
                 />
@@ -51,6 +54,6 @@ export class RoomTitleAtom extends React.Component<Props, State> {
   }
 }
 
-export const RoomTitle = connect<StateProps, {}, OwnProps>((state: ClientState) => ({ room: state.room }))(
-  RoomTitleAtom,
-)
+export const RoomTitle = connect<StateProps, {}, OwnProps>((state: ClientState) => ({
+  room: state.room,
+}))(RoomTitleAtom)

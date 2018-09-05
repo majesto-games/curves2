@@ -1,14 +1,18 @@
 import { createAction } from "typesafe-actions"
 
 import { Message } from "./client"
-import { ConnectionGroup } from "./connection"
+import { LocalGroup, OnlineGroup } from "./connection"
 import { PlayerID, TailPart, VerticeGroup } from "./shared"
 
-export const createOnlineRoom = createAction("createOnlineRoom", (resolve) => (name: string) => resolve({ name }))
+export const createOnlineRoom = createAction("createOnlineRoom", (resolve) => () => resolve())
+export const createdOnlineRoom = createAction("createdOnlineRoom", (resolve) => (name: string) => resolve({ name }))
 export const createLocalRoom = createAction("createLocalRoom", (resolve) => () => resolve())
 export const addLocalPlayer = createAction("addLocalPlayer", (resolve) => () => resolve())
 export const joinOnlineRoom = createAction("joinOnlineRoom", (resolve) => (name: string) => resolve({ name }))
-export const createGroup = createAction("createGroup", (resolve) => (instance: ConnectionGroup) =>
+export const createOnlineGroup = createAction("createOnlineGroup", (resolve) => (instance: OnlineGroup) =>
+  resolve({ instance }),
+)
+export const createLocalGroup = createAction("createLocalGroup", (resolve) => (instance: LocalGroup) =>
   resolve({ instance }),
 )
 export const leaveRoom = createAction("leaveRoom", (resolve) => () => resolve())

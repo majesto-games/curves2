@@ -1,3 +1,12 @@
+@font-face {
+  font-family: "FabricMDL2Icons";
+  src: url("https://static2.sharepointonline.com/files/fabric/assets/icons/fabricmdl2icons-2.68.woff2") format("woff2"),
+    url("https://static2.sharepointonline.com/files/fabric/assets/icons/fabricmdl2icons-2.68.woff") format("woff"),
+    url("https://static2.sharepointonline.com/files/fabric/assets/icons/fabricmdl2icons-2.68.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --green: #84dc2c;
 }
@@ -75,6 +84,38 @@ body {
 
 .HeaderButtons button {
   margin: 5px 0 10px 10px;
+  position: relative;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.HeaderButtons button.loading::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: inherit;
+}
+
+.HeaderButtons button.loading::after {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  font-family: FabricMDL2Icons;
+  content: "\E895";
+  font-size: 2rem;
+  animation: spin 1s linear infinite;
 }
 
 .RoomTitle {
@@ -189,10 +230,13 @@ button {
   display: flex;
   justify-content: flex-end;
   flex-direction: column;
+  z-index: 999;
+  pointer-events: none;
 }
 
 .ms-MessageBar {
   margin-top: 10px;
+  pointer-events: auto;
 }
 
 .fade-enter {

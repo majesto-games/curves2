@@ -1,5 +1,6 @@
 import { WebGroup, WebGroupState } from "netflux"
 import { Dispatch } from "redux"
+import { randomAdjective, randomNoun } from "sillyname"
 import { ActionType } from "typesafe-actions"
 
 import * as actions from "./actions"
@@ -8,7 +9,7 @@ type ConnectionAction = ActionType<typeof actions>
 
 export interface ConnectionGroup {
   send: (action: ConnectionAction) => void
-  host: (room?: string) => void
+  host: () => void
   join: (room?: string) => void
   leave: () => void
 }
@@ -17,7 +18,7 @@ export type ConnectionGroupConstructor = {
   new (dispatch: Dispatch<ConnectionAction>): ConnectionGroup
 }
 
-export class LocalGroup implements ConnectionGroup {
+export class LocalGroup {
   members: number[] = []
 
   constructor(private dispatch: Dispatch) {}
@@ -34,9 +35,7 @@ export class LocalGroup implements ConnectionGroup {
     }
   }
 
-  host = () => {
-    this.join()
-  }
+  host = () => this.join()
 
   join = () => {
     const r = crypto.getRandomValues(new Uint32Array(1))
@@ -54,7 +53,7 @@ export class LocalGroup implements ConnectionGroup {
   }
 }
 
-export class OnlineGroup implements ConnectionGroup {
+export class OnlineGroup {
   private wg: WebGroup
   private hostId: number
   private leaving = false
@@ -131,10 +130,13 @@ export class OnlineGroup implements ConnectionGroup {
     }
   }
 
-  host = (room: string) => {
+  host = () => {
     this.initialize()
     this.wg.onMyId = (id) => (this.hostId = id)
-    this.wg.join(room)
+
+    const name = (randomAdjective() + randomNoun() + "-" + randomNoun()).toLowerCase()
+
+    this.wg.join(name)
   }
 
   join = (room: string) => {

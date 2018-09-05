@@ -1,19 +1,28 @@
 import { CompoundButton } from "office-ui-fabric-react"
 import * as React from "react"
 import { connect } from "react-redux"
-import { randomAdjective, randomNoun } from "sillyname"
 
 import * as actions from "../actions"
-import { ClientState } from "../client"
+import { ClientState, isLoading } from "../client"
 
-export const HeaderButtonsAtom: React.SFC<Props> = ({ createLocalRoom, createOnlineRoom, joinRoom }) => (
+export const HeaderButtonsAtom: React.SFC<Props> = ({
+  createLocalRoom,
+  createOnlineRoom,
+  joinOnlineRoom,
+  isLoading,
+}) => (
   <div className="HeaderButtons">
     <CompoundButton
       primary
+      className={isLoading ? "loading" : ""}
       iconProps={{ iconName: "Globe" }}
       text="Create room"
       secondaryText="Start an online game"
-      onClick={() => createOnlineRoom((randomAdjective() + randomNoun() + "-" + randomNoun()).toLowerCase())}
+      onClick={() => {
+        if (!isLoading) {
+          createOnlineRoom()
+        }
+      }}
     />
     <CompoundButton
       iconProps={{ iconName: "DoubleChevronRight8" }}
@@ -23,7 +32,7 @@ export const HeaderButtonsAtom: React.SFC<Props> = ({ createLocalRoom, createOnl
         const name = prompt("Enter room name:")
 
         if (name) {
-          joinRoom(name)
+          joinOnlineRoom(name)
         }
       }}
     />
@@ -38,21 +47,23 @@ export const HeaderButtonsAtom: React.SFC<Props> = ({ createLocalRoom, createOnl
 
 type Props = OwnProps & StateProps & DispatchProps
 
-type StateProps = {}
+type StateProps = {
+  isLoading: boolean
+}
 type DispatchProps = {
-  createLocalRoom: typeof actions.createLocalRoom
   createOnlineRoom: typeof actions.createOnlineRoom
-  joinRoom: typeof actions.joinOnlineRoom
+  createLocalRoom: typeof actions.createLocalRoom
+  joinOnlineRoom: typeof actions.joinOnlineRoom
 }
 type OwnProps = {}
 
 export const HeaderButtons = connect<StateProps, DispatchProps, OwnProps>(
   (state: ClientState) => ({
-    messages: state.messages,
+    isLoading: isLoading(state),
   }),
   {
-    createLocalRoom: actions.createLocalRoom,
     createOnlineRoom: actions.createOnlineRoom,
-    joinRoom: actions.joinOnlineRoom,
+    createLocalRoom: actions.createLocalRoom,
+    joinOnlineRoom: actions.joinOnlineRoom,
   },
 )(HeaderButtonsAtom)

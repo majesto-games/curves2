@@ -57,9 +57,9 @@ const notifyWhenPlayerLeaves: Epic<RootAction, RootAction, ClientState> = (actio
     ),
   )
 
-const notifyWhenCreatingOnlineRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+const notifyWhenCreatedOnlineRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
   action$.pipe(
-    filter(isActionOf(actions.createOnlineRoom)),
+    filter(isActionOf(actions.createdOnlineRoom)),
     map(({ payload: { name } }) =>
       actions.showMessage({
         type: MessageBarType.success,
@@ -71,17 +71,21 @@ const notifyWhenCreatingOnlineRoom: Epic<RootAction, RootAction, ClientState> = 
 const createGroupWhenCreatingOnlineRoom: Epic<RootAction, RootAction, ClientState> = (action$) =>
   action$.pipe(
     filter(isActionOf(actions.createOnlineRoom)),
-    tap(({ payload: { name } }) => {
-      history.push("/room/" + name)
-    }),
-    map(({ payload: { name } }) => {
+    map(() => {
       const group = new OnlineGroup(clientStore.dispatch)
 
-      group.host(name)
+      group.host()
 
       return group
     }),
-    map((group) => actions.createGroup(group)),
+    map((group) => actions.createOnlineGroup(group)),
+  )
+
+const redirectWhenCreatedOnlineRoom: Epic<RootAction, RootAction, ClientState> = (action$) =>
+  action$.pipe(
+    filter(isActionOf(actions.createdOnlineRoom)),
+    tap(({ payload: { name } }) => history.push("/room/" + name)),
+    ignoreElements(),
   )
 
 const createGroupWhenCreatingLocalRoom: Epic<RootAction, RootAction, ClientState> = (action$) =>
@@ -97,7 +101,7 @@ const createGroupWhenCreatingLocalRoom: Epic<RootAction, RootAction, ClientState
 
       return group
     }),
-    map((group) => actions.createGroup(group)),
+    map((group) => actions.createLocalGroup(group)),
   )
 
 const createGroupWhenJoiningRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
@@ -111,7 +115,7 @@ const createGroupWhenJoiningRoom: Epic<RootAction, RootAction, ClientState> = (a
 
       group.join(name)
 
-      return actions.createGroup(group)
+      return actions.createOnlineGroup(group)
     }),
   )
 
@@ -143,9 +147,8 @@ const addLocalPlayerToOnlineRoom: Epic<RootAction, RootAction, ClientState> = (a
 const addLocalPlayerToLocalRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(actions.addLocalPlayer)),
-    filter(() => state$.value.room.group !== null && !state$.value.room.group.online),
     tap(() => {
-      if (state$.value.room.group) {
+      if (state$.value.room.group && !state$.value.room.group.online) {
         state$.value.room.group.instance.join()
       }
     }),
@@ -156,11 +159,12 @@ export const rootEpic = combineEpics(
   notifyWhenDisconnected,
   notifyWhenPlayerJoins,
   notifyWhenPlayerLeaves,
-  notifyWhenCreatingOnlineRoom,
+  notifyWhenCreatedOnlineRoom,
   createGroupWhenCreatingOnlineRoom,
   createGroupWhenCreatingLocalRoom,
   createGroupWhenJoiningRoom,
   leaveGroupWhenLeavingRoom,
   addLocalPlayerToOnlineRoom,
   addLocalPlayerToLocalRoom,
+  redirectWhenCreatedOnlineRoom,
 )
