@@ -66,6 +66,11 @@ body {
 .RoomHeader {
   display: flex;
   align-items: center;
+  flex-direction: column;
+}
+
+.HeaderButtons {
+  margin-top: 10px;
 }
 
 .HeaderButtons button {
@@ -75,9 +80,9 @@ body {
 .RoomTitle {
   flex: 1;
   font-size: 1.5rem;
-  margin-left: 10px;
   display: flex;
   align-items: center;
+  margin: 10px;
 }
 
 .Game {
@@ -149,16 +154,7 @@ button {
 }
 
 @media only screen and (max-width: 768px) {
-  .RoomHeader {
-    flex-direction: column;
-  }
-
-  .RoomTitle {
-    margin-left: 0;
-  }
-
   .HeaderButtons {
-    margin-top: 10px;
     width: 100%;
     justify-content: center;
   }

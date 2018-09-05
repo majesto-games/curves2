@@ -2,21 +2,14 @@ import { CompoundButton } from "office-ui-fabric-react"
 import * as React from "react"
 import { connect } from "react-redux"
 
-import { group, history } from ".."
+import { history } from ".."
+import * as actions from "../actions"
 import { ClientState } from "../client"
 
-type StateProps = {
-  state: ClientState
-}
-
-type OwnProps = {}
-
-type Props = StateProps & OwnProps
-
-export const RoomButtonsAtom: React.SFC<Props> = ({ state }) => (
+export const RoomButtonsAtom: React.SFC<Props> = ({ isHost, leaveRoom, addLocalPlayer }) => (
   <div className="HeaderButtons">
     <CompoundButton
-      disabled={!state.room.isHost}
+      disabled={!isHost}
       primary
       iconProps={{ iconName: "DoubleChevronRight8" }}
       text="Start game"
@@ -24,7 +17,13 @@ export const RoomButtonsAtom: React.SFC<Props> = ({ state }) => (
       onClick={() => history.push("/game/test")}
     />
     <CompoundButton
-      disabled={!state.room.isHost}
+      iconProps={{ iconName: "Add" }}
+      text="Add player"
+      secondaryText="Add local player"
+      onClick={() => addLocalPlayer()}
+    />
+    <CompoundButton
+      disabled={!isHost}
       iconProps={{ iconName: "Settings" }}
       text="Settings"
       secondaryText="Configure game settings"
@@ -33,12 +32,23 @@ export const RoomButtonsAtom: React.SFC<Props> = ({ state }) => (
       iconProps={{ iconName: "Leave" }}
       text="Leave room"
       secondaryText="Leave room"
-      onClick={() => {
-        group.leave()
-        history.push("/")
-      }}
+      onClick={() => leaveRoom()}
     />
   </div>
 )
 
-export const RoomButtons = connect<StateProps, {}, OwnProps>((state: ClientState) => ({ state }))(RoomButtonsAtom)
+type Props = OwnProps & StateProps & DispatchProps
+
+type StateProps = {
+  isHost: boolean
+}
+type DispatchProps = {
+  leaveRoom: typeof actions.leaveRoom
+  addLocalPlayer: typeof actions.addLocalPlayer
+}
+type OwnProps = {}
+
+export const RoomButtons = connect<StateProps, DispatchProps, OwnProps>(
+  (state: ClientState) => ({ isHost: state.room.isHost }),
+  { leaveRoom: actions.leaveRoom, addLocalPlayer: actions.addLocalPlayer },
+)(RoomButtonsAtom)

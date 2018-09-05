@@ -23,7 +23,7 @@ export const group = new OnlineGroup(<T extends AnyAction>(action: T) => {
   return action
 })
 
-window.addEventListener("offline", () => clientStore.dispatch(actions.disconnected("offline")))
+window.addEventListener("offline", () => clientStore.dispatch(actions.disconnect("offline")))
 
 export const history = createHistory()
 

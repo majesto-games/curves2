@@ -6,24 +6,23 @@ import * as actions from "./actions"
 
 type ConnectionAction = ActionType<typeof actions>
 
-interface ConnectionGroup {
-  send(action: ConnectionAction): void
-  host(room: string): void
-  join(room: string): void
-  leave(): void
+export interface ConnectionGroup {
+  send: (action: ConnectionAction) => void
+  host: (room?: string) => void
+  join: (room?: string) => void
+  leave: () => void
 }
 
 export type ConnectionGroupConstructor = {
   new (dispatch: Dispatch<ConnectionAction>): ConnectionGroup
 }
 
-// TODO: Finish this
 export class LocalGroup implements ConnectionGroup {
   members: number[] = []
 
   constructor(private dispatch: Dispatch) {}
 
-  send(action: ConnectionAction) {
+  send = (action: ConnectionAction) => {
     if (action.type === "playerJoin") {
       console.log("playerJoin", action.payload.id)
       this.dispatch(actions.playerJoin(action.payload.id))
@@ -35,16 +34,23 @@ export class LocalGroup implements ConnectionGroup {
     }
   }
 
-  host(room: string) {
-    this.dispatch(actions.roomJoin(room, true))
+  host = () => {
+    this.join()
   }
 
-  join(room: string) {
-    this.dispatch(actions.roomJoin(room))
+  join = () => {
+    const r = crypto.getRandomValues(new Uint32Array(1))
+    const id = r[0] > 2147483648 ? r[0] : r[0] + 2147483648
+    this.members.push(id)
+
+    this.dispatch(actions.playerJoin(id))
   }
 
-  leave() {
-    this.dispatch(actions.roomLeave())
+  leave = () => {
+    const id = this.members.pop()
+    if (id) {
+      this.dispatch(actions.playerLeave(id))
+    }
   }
 }
 
@@ -55,8 +61,17 @@ export class OnlineGroup implements ConnectionGroup {
 
   constructor(private dispatch: Dispatch) {}
 
-  initialize() {
+  initialize = () => {
     this.leaving = false
+    // setLogLevel(
+    //   LogLevel.DEBUG,
+    //   LogLevel.WEB_GROUP,
+    //   LogLevel.WEBRTC,
+    //   LogLevel.CHANNEL,
+    //   LogLevel.TOPOLOGY,
+    //   LogLevel.SIGNALING,
+    //   LogLevel.CHANNEL_BUILDER,
+    // )
     this.wg = new WebGroup()
     this.wg.onMemberJoin = (id) => {
       if (this.isHost()) {
@@ -76,10 +91,9 @@ export class OnlineGroup implements ConnectionGroup {
         this.wg.send(JSON.stringify(actions.playerLeave(id)))
         this.dispatch(actions.playerLeave(id))
       } else {
-        // Host has left the room, leave aswell
+        // Host has left the room, disconnect
         if (id === this.hostId && !this.leaving) {
-          this.leave()
-          this.dispatch(actions.disconnected("hostDisconnect"))
+          this.dispatch(actions.disconnect("hostDisconnect"))
         }
       }
     }
@@ -91,43 +105,44 @@ export class OnlineGroup implements ConnectionGroup {
         this.hostId = id
       }
 
+      if (msg.type === "playerLeave") {
+        this.dispatch(actions.playerLeave(msg.payload.id))
+        if (this.isHost()) {
+          this.wg.send(JSON.stringify(actions.playerLeave(msg.payload.id)))
+        }
+      }
+
       // Ignore messages not coming from the host
       if (id !== this.hostId) return
 
       if (msg.type === "playerJoin") {
         this.dispatch(actions.playerJoin(msg.payload.id))
       }
-
-      if (msg.type === "playerLeave") {
-        this.dispatch(actions.playerLeave(msg.payload.id))
-      }
     }
 
     this.wg.onStateChange = (state) => {
       if (state === WebGroupState.JOINED) {
-        this.dispatch(actions.roomJoin(this.wg.key, this.isHost()))
         if (this.isHost()) {
           this.dispatch(actions.playerJoin(this.wg.myId))
         }
       }
       if (state === WebGroupState.LEFT) {
-        this.dispatch(actions.roomLeave())
       }
     }
   }
 
-  host(room: string) {
+  host = (room: string) => {
     this.initialize()
     this.wg.onMyId = (id) => (this.hostId = id)
     this.wg.join(room)
   }
 
-  join(room: string) {
+  join = (room: string) => {
     this.initialize()
     this.wg.join(room)
   }
 
-  send(action: ConnectionAction) {
+  send = (action: ConnectionAction) => {
     if (this.isHost()) {
       this.wg.send(JSON.stringify(action))
     } else {
@@ -135,13 +150,13 @@ export class OnlineGroup implements ConnectionGroup {
     }
   }
 
-  leave() {
+  leave = () => {
     this.leaving = true
-    this.wg.leave()
-    delete this.wg
+    if (this.wg) {
+      this.wg.sendTo(this.hostId, JSON.stringify(actions.playerLeave(this.wg.myId)))
+      this.wg.leave()
+    }
   }
 
-  private isHost() {
-    return this.wg.myId === this.hostId
-  }
+  private isHost = () => this.wg.myId === this.hostId
 }

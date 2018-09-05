@@ -5,6 +5,7 @@ import { createEpicMiddleware } from "redux-observable"
 import { ActionType, getType } from "typesafe-actions"
 
 import * as actions from "./actions"
+import { ConnectionGroup, OnlineGroup } from "./connection"
 import { rootEpic } from "./epics"
 import { mergeFloat32, mergeUint16 } from "./shared"
 
@@ -32,10 +33,11 @@ export type ClientTail = {
   meshes: ClientMesh[]
 }
 
-type RoomState = {
+export type RoomState = {
   name: string
   isHost: boolean
   players: number[]
+  group: { online: boolean; instance: ConnectionGroup } | null
 }
 
 export type Message = { type: MessageBarType; text: string }
@@ -50,6 +52,7 @@ const initialRoomState: RoomState = {
   name: "",
   isHost: false,
   players: [],
+  group: null,
 }
 
 const initialState: ClientState = {
@@ -58,7 +61,7 @@ const initialState: ClientState = {
   messages: [],
 }
 
-const reducer = (state: ClientState = initialState, action: GameAction) => {
+const reducer = (state: ClientState = initialState, action: GameAction): ClientState => {
   if (action.type === getType(actions.playerJoin)) {
     const { id } = action.payload
 
@@ -76,14 +79,15 @@ const reducer = (state: ClientState = initialState, action: GameAction) => {
     return { ...state, room: { ...state.room, players: state.room.players.filter((pId) => pId !== id) } }
   }
 
-  if (action.type === getType(actions.roomLeave)) {
-    return { ...state, room: initialRoomState }
+  if (action.type === getType(actions.leaveRoom)) {
+    const { name, isHost, players } = initialRoomState
+    return { ...state, room: { ...state.room, name, isHost, players } }
   }
 
-  if (action.type === getType(actions.roomJoin)) {
-    const { name, isHost } = action.payload
+  if (action.type === getType(actions.joinOnlineRoom)) {
+    const { name } = action.payload
 
-    return { ...state, room: { ...state.room, name, isHost } }
+    return { ...state, room: { ...state.room, name, players: [] } }
   }
 
   if (action.type === getType(actions.showMessage)) {
@@ -92,6 +96,24 @@ const reducer = (state: ClientState = initialState, action: GameAction) => {
 
   if (action.type === getType(actions.dismissMessage)) {
     return { ...state, messages: state.messages.slice(1) }
+  }
+
+  if (action.type === getType(actions.createOnlineRoom)) {
+    const { name } = action.payload
+
+    return { ...state, room: { ...state.room, name, isHost: true, players: [] } }
+  }
+
+  if (action.type === getType(actions.createLocalRoom)) {
+    return { ...state, room: { ...state.room, name: "", isHost: true, players: [] } }
+  }
+
+  if (action.type === getType(actions.createGroup)) {
+    const { instance } = action.payload
+
+    const online = instance instanceof OnlineGroup
+
+    return { ...state, room: { ...state.room, group: { online, instance } } }
   }
 
   if (action.type === getType(actions.addTail)) {

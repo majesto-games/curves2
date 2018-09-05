@@ -1,17 +1,18 @@
 import { MessageBarType } from "office-ui-fabric-react"
 import { combineEpics, Epic } from "redux-observable"
-import { filter, map, tap } from "rxjs/operators"
+import { filter, ignoreElements, map, tap } from "rxjs/operators"
 import { ActionType, isActionOf } from "typesafe-actions"
 
 import { history } from "."
 import * as actions from "./actions"
-import { ClientState } from "./client"
+import { ClientState, store as clientStore } from "./client"
+import { LocalGroup, OnlineGroup } from "./connection"
 
 export type RootAction = ActionType<typeof actions>
 
-const disconnect: Epic<RootAction> = (action$) =>
+const notifyWhenDisconnected: Epic<RootAction> = (action$) =>
   action$.pipe(
-    filter(isActionOf(actions.disconnected)),
+    filter(isActionOf(actions.disconnect)),
     tap((action) => {
       console.log(action)
       history.replace("/")
@@ -31,21 +32,10 @@ const disconnect: Epic<RootAction> = (action$) =>
     }),
   )
 
-const roomJoined: Epic<RootAction> = (action$) =>
-  action$.pipe(
-    filter(isActionOf(actions.roomJoin)),
-    filter((action) => action.payload.isHost),
-    map(({ payload: { name } }) =>
-      actions.showMessage({
-        type: MessageBarType.success,
-        text: "Successfully created room '" + name + "'.",
-      }),
-    ),
-  )
-
-const playerJoined: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+const notifyWhenPlayerJoins: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(actions.playerJoin)),
+    filter(() => state$.value.room.group !== null && state$.value.room.group.online),
     filter(() => state$.value.room.players.length > 1),
     map(({ payload: { id } }) =>
       actions.showMessage({
@@ -55,9 +45,10 @@ const playerJoined: Epic<RootAction, RootAction, ClientState> = (action$, state$
     ),
   )
 
-const playerLeft: Epic<RootAction, RootAction, ClientState> = (action$) =>
+const notifyWhenPlayerLeaves: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(actions.playerLeave)),
+    filter(() => state$.value.room.group !== null && state$.value.room.group.online),
     map(({ payload: { id } }) =>
       actions.showMessage({
         type: MessageBarType.info,
@@ -66,4 +57,110 @@ const playerLeft: Epic<RootAction, RootAction, ClientState> = (action$) =>
     ),
   )
 
-export const rootEpic = combineEpics(disconnect, roomJoined, playerJoined, playerLeft)
+const notifyWhenCreatingOnlineRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(actions.createOnlineRoom)),
+    map(({ payload: { name } }) =>
+      actions.showMessage({
+        type: MessageBarType.success,
+        text: "Successfully created room '" + name + "'.",
+      }),
+    ),
+  )
+
+const createGroupWhenCreatingOnlineRoom: Epic<RootAction, RootAction, ClientState> = (action$) =>
+  action$.pipe(
+    filter(isActionOf(actions.createOnlineRoom)),
+    tap(({ payload: { name } }) => {
+      history.push("/room/" + name)
+    }),
+    map(({ payload: { name } }) => {
+      const group = new OnlineGroup(clientStore.dispatch)
+
+      group.host(name)
+
+      return group
+    }),
+    map((group) => actions.createGroup(group)),
+  )
+
+const createGroupWhenCreatingLocalRoom: Epic<RootAction, RootAction, ClientState> = (action$) =>
+  action$.pipe(
+    filter(isActionOf(actions.createLocalRoom)),
+    tap(() => {
+      history.push("/room/" + "local")
+    }),
+    map(() => {
+      const group = new LocalGroup(clientStore.dispatch)
+
+      group.host()
+
+      return group
+    }),
+    map((group) => actions.createGroup(group)),
+  )
+
+const createGroupWhenJoiningRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(actions.joinOnlineRoom)),
+    tap(({ payload: { name } }) => {
+      history.push("/room/" + name)
+    }),
+    map(({ payload: { name } }) => {
+      const group = new OnlineGroup(clientStore.dispatch)
+
+      group.join(name)
+
+      return actions.createGroup(group)
+    }),
+  )
+
+const leaveGroupWhenLeavingRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(actions.leaveRoom)),
+    tap(() => {
+      if (state$.value.room.group) {
+        state$.value.room.group.instance.leave()
+      }
+
+      history.push("/")
+    }),
+    ignoreElements(),
+  )
+
+const addLocalPlayerToOnlineRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(actions.addLocalPlayer)),
+    filter(() => state$.value.room.group !== null && state$.value.room.group.online),
+    tap(() => {
+      if (state$.value.room.group) {
+        // state$.value.room.group.instance.add()
+      }
+    }),
+    ignoreElements(),
+  )
+
+const addLocalPlayerToLocalRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(actions.addLocalPlayer)),
+    filter(() => state$.value.room.group !== null && !state$.value.room.group.online),
+    tap(() => {
+      if (state$.value.room.group) {
+        state$.value.room.group.instance.join()
+      }
+    }),
+    ignoreElements(),
+  )
+
+export const rootEpic = combineEpics(
+  notifyWhenDisconnected,
+  notifyWhenPlayerJoins,
+  notifyWhenPlayerLeaves,
+  notifyWhenCreatingOnlineRoom,
+  createGroupWhenCreatingOnlineRoom,
+  createGroupWhenCreatingLocalRoom,
+  createGroupWhenJoiningRoom,
+  leaveGroupWhenLeavingRoom,
+  addLocalPlayerToOnlineRoom,
+  addLocalPlayerToLocalRoom,
+)

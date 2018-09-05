@@ -1,13 +1,13 @@
-import { CompoundButton, MessageBar } from "office-ui-fabric-react"
+import { MessageBar } from "office-ui-fabric-react"
 import * as React from "react"
 import { connect } from "react-redux"
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router"
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 
-import { history } from ".."
 import * as actions from "../actions"
 import { ClientState, Message } from "../client"
 import { Footer } from "./Footer"
+import { GameButtons } from "./GameButtons"
 import { GameContainer } from "./GameContainer"
 import { GamePlayerList } from "./GamePlayerList"
 import { HeaderButtons } from "./HeaderButtons"
@@ -64,19 +64,7 @@ export const AppAtom: React.SFC<Props> = ({ messages, dismissMessage }) => (
           <div className="Game">
             <GameContainer />
             <div className="GameSidebar">
-              <div className="GameButtons">
-                <CompoundButton
-                  iconProps={{ iconName: "Settings" }}
-                  text="Settings"
-                  secondaryText="Configure game settings"
-                />
-                <CompoundButton
-                  iconProps={{ iconName: "Leave" }}
-                  text="Leave game"
-                  secondaryText="Leave game"
-                  onClick={() => history.push("/")}
-                />
-              </div>
+              <GameButtons />
               <GamePlayerList />
             </div>
           </div>
