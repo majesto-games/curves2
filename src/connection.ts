@@ -122,6 +122,7 @@ export class OnlineGroup {
     this.wg.onStateChange = (state) => {
       if (state === WebGroupState.JOINED) {
         if (this.isHost()) {
+          this.dispatch(actions.createdOnlineRoom(this.wg.key))
           this.dispatch(actions.playerJoin(this.wg.myId))
         }
       }
