@@ -6,7 +6,7 @@ import { ActionType, isActionOf } from "typesafe-actions"
 import { history } from "."
 import * as actions from "./actions"
 import { ClientState, store as clientStore } from "./client"
-import { LocalGroup, OnlineGroup } from "./connection"
+import { LocalGroup, OnlineGroup } from "./groups"
 
 export type RootAction = ActionType<typeof actions>
 
@@ -49,6 +49,7 @@ const notifyWhenPlayerLeaves: Epic<RootAction, RootAction, ClientState> = (actio
   action$.pipe(
     filter(isActionOf(actions.playerLeave)),
     filter(() => state$.value.room.group !== null && state$.value.room.group.online),
+    filter(() => state$.value.room.players.length > 0),
     map(({ payload: { id } }) =>
       actions.showMessage({
         type: MessageBarType.info,
@@ -119,17 +120,16 @@ const createGroupWhenJoiningRoom: Epic<RootAction, RootAction, ClientState> = (a
     }),
   )
 
-const leaveGroupWhenLeavingRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+const removeGroupWhenLeavingRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(actions.leaveRoom)),
     tap(() => {
-      if (state$.value.room.group) {
-        state$.value.room.group.instance.leave()
-      }
+      // Tell the group instance that it should leave the group
+      state$.value.room.group && state$.value.room.group.instance.leave()
 
       history.push("/")
     }),
-    ignoreElements(),
+    map(() => actions.removeGroup()),
   )
 
 const addLocalPlayerToOnlineRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
@@ -163,8 +163,8 @@ export const rootEpic = combineEpics(
   createGroupWhenCreatingOnlineRoom,
   createGroupWhenCreatingLocalRoom,
   createGroupWhenJoiningRoom,
-  leaveGroupWhenLeavingRoom,
   addLocalPlayerToOnlineRoom,
   addLocalPlayerToLocalRoom,
   redirectWhenCreatedOnlineRoom,
+  removeGroupWhenLeavingRoom,
 )

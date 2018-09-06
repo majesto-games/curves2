@@ -1,7 +1,7 @@
 import { createAction } from "typesafe-actions"
 
 import { Message } from "./client"
-import { LocalGroup, OnlineGroup } from "./connection"
+import { LocalGroup, OnlineGroup } from "./groups"
 import { PlayerID, TailPart, VerticeGroup } from "./shared"
 
 export const createOnlineRoom = createAction("createOnlineRoom", (resolve) => () => resolve())
@@ -16,6 +16,7 @@ export const createLocalGroup = createAction("createLocalGroup", (resolve) => (i
   resolve({ instance }),
 )
 export const leaveRoom = createAction("leaveRoom", (resolve) => () => resolve())
+export const removeGroup = createAction("removeGroup", (resolve) => () => resolve())
 export const disconnect = createAction("disconnect", (resolve) => (reason: "hostDisconnect" | "offline") =>
   resolve({ reason }),
 )

@@ -5,14 +5,14 @@ import { ActionType } from "typesafe-actions"
 
 import * as actions from "./actions"
 
-type ConnectionAction = ActionType<typeof actions>
+type GroupAction = ActionType<typeof actions> // TODO: Should not include all actions
 
 export class LocalGroup {
   members: number[] = []
 
   constructor(private dispatch: Dispatch) {}
 
-  send = (action: ConnectionAction) => {
+  send = (action: GroupAction) => {
     if (action.type === "playerJoin") {
       console.log("playerJoin", action.payload.id)
       this.dispatch(actions.playerJoin(action.payload.id))
@@ -75,9 +75,12 @@ export class OnlineGroup {
     }
 
     this.wg.onMemberLeave = (id) => {
+      if (id !== this.wg.myId) {
+        this.dispatch(actions.playerLeave(id))
+      }
+
       if (this.isHost()) {
         this.wg.send(JSON.stringify(actions.playerLeave(id)))
-        this.dispatch(actions.playerLeave(id))
       } else {
         // Host has left the room, disconnect
         if (id === this.hostId && !this.leaving) {
@@ -87,7 +90,7 @@ export class OnlineGroup {
     }
 
     this.wg.onMessage = (id, data: string) => {
-      const msg: ConnectionAction = JSON.parse(data)
+      const msg: GroupAction = JSON.parse(data)
 
       if (msg.type === "isHost") {
         this.hostId = id
@@ -116,6 +119,7 @@ export class OnlineGroup {
         }
       }
       if (state === WebGroupState.LEFT) {
+        // TODO: Should handle this case
       }
     }
   }
@@ -134,7 +138,7 @@ export class OnlineGroup {
     this.wg.join(room)
   }
 
-  send = (action: ConnectionAction) => {
+  send = (action: GroupAction) => {
     if (this.isHost()) {
       this.wg.send(JSON.stringify(action))
     } else {
@@ -147,6 +151,7 @@ export class OnlineGroup {
     if (this.wg) {
       this.wg.sendTo(this.hostId, JSON.stringify(actions.playerLeave(this.wg.myId)))
       this.wg.leave()
+      delete this.wg
     }
   }
 

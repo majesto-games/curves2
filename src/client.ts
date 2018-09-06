@@ -5,8 +5,8 @@ import { createEpicMiddleware } from "redux-observable"
 import { ActionType, getType } from "typesafe-actions"
 
 import * as actions from "./actions"
-import { LocalGroup, OnlineGroup } from "./connection"
 import { rootEpic } from "./epics"
+import { LocalGroup, OnlineGroup } from "./groups"
 import { mergeFloat32, mergeUint16 } from "./shared"
 
 // Temporary tail mesh data
@@ -80,7 +80,13 @@ const reducer = (state: ClientState = initialState, action: GameAction): ClientS
   }
 
   if (action.type === getType(actions.leaveRoom) || action.type === getType(actions.createOnlineRoom)) {
-    return { ...state, room: initialRoomState }
+    // Retain group because we use it's reference to call .leave() at a later stage
+    // see removeGroupWhenLeavingRoom in epics.ts
+    return { ...state, room: { ...initialRoomState, group: state.room.group } }
+  }
+
+  if (action.type === getType(actions.removeGroup)) {
+    return { ...state, room: { ...state.room, group: null } }
   }
 
   if (action.type === getType(actions.joinOnlineRoom)) {
