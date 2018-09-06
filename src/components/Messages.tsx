@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 
 import * as actions from "../actions"
-import { ClientState, Message } from "../client"
+import { ClientState, Message } from "../stores/client"
 
 type StateProps = {
   messages: Message[]

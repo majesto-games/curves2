@@ -1,6 +1,6 @@
 import { Point } from "pixi.js"
 
-import { VerticeGroup } from "./shared"
+import { VerticeGroup } from "./utils"
 
 function createConnectedPolygon(point: Point, thickness: number, lastPoints: number[], point2: Point): number[] {
   const angle = Math.atan2(point2.y - point.y, point2.x - point.x)

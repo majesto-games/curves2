@@ -3,10 +3,10 @@ import { combineEpics, Epic } from "redux-observable"
 import { filter, ignoreElements, map, tap } from "rxjs/operators"
 import { ActionType, isActionOf } from "typesafe-actions"
 
-import { history } from "."
+import { clientStore, history } from "."
 import * as actions from "./actions"
-import { ClientState, store as clientStore } from "./client"
 import { LocalGroup, OnlineGroup } from "./groups"
+import { ClientState } from "./stores/client"
 
 export type RootAction = ActionType<typeof actions>
 

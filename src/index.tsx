@@ -8,8 +8,8 @@ import * as ReactDOM from "react-dom"
 import { Provider } from "react-redux"
 import { Router } from "react-router-dom"
 
-import { store as clientStore } from "./client"
 import { App } from "./components"
+import { configureStore as configureClientStore } from "./stores/client"
 import { theme } from "./theme"
 
 export const history = createHistory()
@@ -17,6 +17,8 @@ export const history = createHistory()
 initializeIcons()
 
 loadTheme(theme)
+
+export const clientStore = configureClientStore()
 
 ReactDOM.render(
   <Fabric>

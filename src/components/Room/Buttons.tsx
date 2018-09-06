@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 
 import { history } from "../.."
 import * as actions from "../../actions"
-import { ClientState } from "../../client"
+import { ClientState } from "../../stores/client"
 
 export const RoomButtonsAtom: React.SFC<Props> = ({ isHost, leaveRoom, addLocalPlayer }) => (
   <div className="HeaderButtons">

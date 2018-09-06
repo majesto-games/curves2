@@ -2,7 +2,7 @@ import { ColumnActionsMode, DetailsList, SelectionMode } from "office-ui-fabric-
 import * as React from "react"
 import { connect } from "react-redux"
 
-import { ClientState } from "../../client"
+import { ClientState } from "../../stores/client"
 
 function seededColor(input: number) {
   // Input is a 32 bit uint, apply modulus it to fit 360 degrees

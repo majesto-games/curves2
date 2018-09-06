@@ -4,13 +4,13 @@ import { createLogger } from "redux-logger"
 import { createEpicMiddleware } from "redux-observable"
 import { ActionType, getType } from "typesafe-actions"
 
-import * as actions from "./actions"
-import { rootEpic } from "./epics"
-import { LocalGroup, OnlineGroup } from "./groups"
-import { mergeFloat32, mergeUint16 } from "./shared"
+import * as actions from "../actions"
+import { rootEpic } from "../epics"
+import { LocalGroup, OnlineGroup } from "../groups"
+import { mergeFloat32, mergeUint16 } from "../utils"
 
 // Temporary tail mesh data
-const state = require("./state.json")
+const state = require("../state.json")
 
 // Rehydrate temporary tail mesh data
 const meshes = state.tails.map(
@@ -170,11 +170,15 @@ const reducer = (state: ClientState = initialState, action: GameAction): ClientS
   return state
 }
 
-const epicMiddleware = createEpicMiddleware()
+export const configureStore = (initialState?: ClientState) => {
+  const epicMiddleware = createEpicMiddleware()
+  const store = initialState
+    ? createStore(reducer, initialState, applyMiddleware(createLogger({ collapsed: true }), epicMiddleware))
+    : createStore(reducer, applyMiddleware(createLogger({ collapsed: true }), epicMiddleware))
+  epicMiddleware.run(rootEpic)
 
-export const store = createStore(reducer, applyMiddleware(createLogger({ collapsed: true }), epicMiddleware))
-
-epicMiddleware.run(rootEpic)
+  return store
+}
 
 export const isLoading = (state: ClientState) =>
   state.room.name === null && (state.room.group !== null && state.room.group.online)

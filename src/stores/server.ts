@@ -2,8 +2,8 @@ import { applyMiddleware, createStore } from "redux"
 import { createLogger } from "redux-logger"
 import { ActionType, getType } from "typesafe-actions"
 
-import * as actions from "./actions"
-import { TailPart } from "./shared"
+import * as actions from "../actions"
+import { TailPart } from "../utils"
 
 export type GameAction = ActionType<typeof actions>
 
@@ -59,4 +59,10 @@ const reducer = (state: State = initialState, action: GameAction) => {
   return state
 }
 
-export const store = createStore(reducer, applyMiddleware(createLogger({ collapsed: true })))
+export const configureStore = (initialState?: State) => {
+  const store = initialState
+    ? createStore(reducer, initialState, applyMiddleware(createLogger({ collapsed: true })))
+    : createStore(reducer, applyMiddleware(createLogger({ collapsed: true })))
+
+  return store
+}

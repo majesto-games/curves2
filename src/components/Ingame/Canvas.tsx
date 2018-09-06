@@ -3,7 +3,7 @@ import * as React from "react"
 import { Container, Stage } from "react-pixi-fiber"
 import { connect } from "react-redux"
 
-import { ClientState, ClientTail } from "../../client"
+import { ClientState, ClientTail } from "../../stores/client"
 import { Mesh } from "../pixi"
 
 PIXI.utils.skipHello()

@@ -1,8 +1,8 @@
 import { createAction } from "typesafe-actions"
 
-import { Message } from "./client"
 import { LocalGroup, OnlineGroup } from "./groups"
-import { PlayerID, TailPart, VerticeGroup } from "./shared"
+import { Message } from "./stores/client"
+import { PlayerID, TailPart, VerticeGroup } from "./utils"
 
 export const createOnlineRoom = createAction("createOnlineRoom", (resolve) => () => resolve())
 export const createdOnlineRoom = createAction("createdOnlineRoom", (resolve) => (name: string) => resolve({ name }))

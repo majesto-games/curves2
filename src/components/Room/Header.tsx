@@ -3,7 +3,7 @@ import * as React from "react"
 import { connect } from "react-redux"
 import { Clipboard } from "ts-clipboard"
 
-import { ClientState, RoomState } from "../../client"
+import { ClientState, RoomState } from "../../stores/client"
 import { theme } from "../../theme"
 
 type StateProps = {

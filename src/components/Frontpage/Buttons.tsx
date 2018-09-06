@@ -3,7 +3,7 @@ import * as React from "react"
 import { connect } from "react-redux"
 
 import * as actions from "../../actions"
-import { ClientState, isLoading } from "../../client"
+import { ClientState, isLoading } from "../../stores/client"
 
 export const ButtonsAtom: React.SFC<Props> = ({ createLocalRoom, createOnlineRoom, joinOnlineRoom, isLoading }) => (
   <div className="HeaderButtons">
