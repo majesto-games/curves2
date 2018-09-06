@@ -2,15 +2,10 @@ import { CompoundButton } from "office-ui-fabric-react"
 import * as React from "react"
 import { connect } from "react-redux"
 
-import * as actions from "../actions"
-import { ClientState, isLoading } from "../client"
+import * as actions from "../../actions"
+import { ClientState, isLoading } from "../../client"
 
-export const HeaderButtonsAtom: React.SFC<Props> = ({
-  createLocalRoom,
-  createOnlineRoom,
-  joinOnlineRoom,
-  isLoading,
-}) => (
+export const ButtonsAtom: React.SFC<Props> = ({ createLocalRoom, createOnlineRoom, joinOnlineRoom, isLoading }) => (
   <div className="HeaderButtons">
     <CompoundButton
       primary
@@ -57,7 +52,7 @@ type DispatchProps = {
 }
 type OwnProps = {}
 
-export const HeaderButtons = connect<StateProps, DispatchProps, OwnProps>(
+export const Buttons = connect<StateProps, DispatchProps, OwnProps>(
   (state: ClientState) => ({
     isLoading: isLoading(state),
   }),
@@ -66,4 +61,4 @@ export const HeaderButtons = connect<StateProps, DispatchProps, OwnProps>(
     createLocalRoom: actions.createLocalRoom,
     joinOnlineRoom: actions.joinOnlineRoom,
   },
-)(HeaderButtonsAtom)
+)(ButtonsAtom)

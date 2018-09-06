@@ -2,7 +2,7 @@ import { ColumnActionsMode, DetailsList, SelectionMode } from "office-ui-fabric-
 import * as React from "react"
 import { connect } from "react-redux"
 
-import { ClientState } from "../client"
+import { ClientState } from "../../client"
 
 function seededColor(input: number) {
   // Input is a 32 bit uint, apply modulus it to fit 360 degrees
@@ -18,7 +18,7 @@ type OwnProps = {}
 
 type Props = StateProps & OwnProps
 
-export const RoomPlayerListAtom: React.SFC<Props> = ({ state }) => (
+export const PlayerListAtom: React.SFC<Props> = ({ state }) => (
   <DetailsList
     selectionMode={SelectionMode.none}
     items={state.room.players.map((p) => ({ name: p, keys: 0, color: seededColor(p) }))}
@@ -63,4 +63,4 @@ export const RoomPlayerListAtom: React.SFC<Props> = ({ state }) => (
   />
 )
 
-export const RoomPlayerList = connect<StateProps, {}, OwnProps>((state: ClientState) => ({ state }))(RoomPlayerListAtom)
+export const PlayerList = connect<StateProps, {}, OwnProps>((state: ClientState) => ({ state }))(PlayerListAtom)

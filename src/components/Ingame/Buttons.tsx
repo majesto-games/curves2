@@ -2,9 +2,9 @@ import { CompoundButton } from "office-ui-fabric-react"
 import * as React from "react"
 import { connect } from "react-redux"
 
-import * as actions from "../actions"
+import * as actions from "../../actions"
 
-export const GameButtonsAtom: React.SFC<Props> = ({ leaveRoom }) => (
+export const ButtonsAtom: React.SFC<Props> = ({ leaveRoom }) => (
   <div className="GameButtons">
     <CompoundButton iconProps={{ iconName: "Settings" }} text="Settings" secondaryText="Configure game settings" />
     <CompoundButton
@@ -24,9 +24,9 @@ type DispatchProps = {
 }
 type OwnProps = {}
 
-export const GameButtons = connect<StateProps, DispatchProps, OwnProps>(
+export const Buttons = connect<StateProps, DispatchProps, OwnProps>(
   undefined,
   {
     leaveRoom: actions.leaveRoom,
   },
-)(GameButtonsAtom)
+)(ButtonsAtom)

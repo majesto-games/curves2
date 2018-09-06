@@ -1,14 +1,14 @@
 import * as PIXI from "pixi.js"
-import { Mesh } from "./pixi"
 import * as React from "react"
 import { Container, Stage } from "react-pixi-fiber"
 import { connect } from "react-redux"
 
-import { ClientState, ClientTail } from "../client"
+import { ClientState, ClientTail } from "../../client"
+import { Mesh } from "../pixi"
 
 PIXI.utils.skipHello()
 
-export const GameContainerAtom: React.SFC<Props> = ({ tails }) => (
+export const CanvasAtom: React.SFC<Props> = ({ tails }) => (
   <div className="GameContainer">
     <Stage width={1000} height={1000} options={{ antialias: true, backgroundColor: 0x101010 }}>
       <Container>
@@ -32,6 +32,6 @@ type StateProps = {
 type DispatchProps = {}
 type OwnProps = {}
 
-export const GameContainer = connect<StateProps, DispatchProps, OwnProps>((state: ClientState) => ({
+export const Canvas = connect<StateProps, DispatchProps, OwnProps>((state: ClientState) => ({
   tails: Object.keys(state.tails).map((k) => state.tails[k]),
-}))(GameContainerAtom)
+}))(CanvasAtom)

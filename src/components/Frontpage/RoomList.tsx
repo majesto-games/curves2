@@ -1,18 +1,19 @@
 import { ColumnActionsMode, DefaultButton, DetailsList, SelectionMode } from "office-ui-fabric-react"
 import * as React from "react"
+import { connect } from "react-redux"
 
-import { group, history } from ".."
+import * as actions from "../../actions"
 
-export const RoomList: React.SFC = () => (
+export const RoomListAtom: React.SFC<Props> = ({ joinOnlineRoom }) => (
   <DetailsList
     selectionMode={SelectionMode.none}
     items={[
       {
-        name: "Room 1",
-        playerCount: 3,
+        name: "room-1",
+        playerCount: 0,
       },
       {
-        name: "Room 2",
+        name: "room-2",
         playerCount: 0,
       },
     ]}
@@ -39,19 +40,29 @@ export const RoomList: React.SFC = () => (
         isResizable: false,
         columnActionsMode: ColumnActionsMode.disabled,
         minWidth: 80,
-        onRender: () => (
+        onRender: (item) => (
           <DefaultButton
             primary
             text="Join"
             size={20}
             iconProps={{ iconName: "DoubleChevronRight8" }}
-            onClick={() => {
-              group.join("test")
-              history.push("/room/test")
-            }}
+            onClick={() => joinOnlineRoom(item.name)}
           />
         ),
       },
     ]}
   />
 )
+
+type Props = OwnProps & StateProps & DispatchProps
+
+type StateProps = {}
+type DispatchProps = {
+  joinOnlineRoom: typeof actions.joinOnlineRoom
+}
+type OwnProps = {}
+
+export const RoomList = connect<StateProps, DispatchProps, OwnProps>(
+  undefined,
+  { joinOnlineRoom: actions.joinOnlineRoom },
+)(RoomListAtom)

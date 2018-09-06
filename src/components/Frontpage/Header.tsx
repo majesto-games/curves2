@@ -1,6 +1,6 @@
 import * as React from "react"
 
-export const StatsTitle: React.SFC = () => (
+export const Header: React.SFC = () => (
   <div className="StatsTitle">
     There are <b>3</b> players online.
     <br />

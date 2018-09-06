@@ -1,7 +1,7 @@
 import { ColumnActionsMode, DetailsList, SelectionMode } from "office-ui-fabric-react"
 import * as React from "react"
 
-export const GamePlayerList: React.SFC = () => (
+export const PlayerList: React.SFC = () => (
   <div className="GamePlayerList">
     <DetailsList
       selectionMode={SelectionMode.none}

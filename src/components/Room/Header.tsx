@@ -3,8 +3,8 @@ import * as React from "react"
 import { connect } from "react-redux"
 import { Clipboard } from "ts-clipboard"
 
-import { ClientState, RoomState } from "../client"
-import { theme } from "../theme"
+import { ClientState, RoomState } from "../../client"
+import { theme } from "../../theme"
 
 type StateProps = {
   room: RoomState
@@ -18,7 +18,7 @@ type State = {
   clipboardButtonClicked: boolean
 }
 
-export class RoomTitleAtom extends React.Component<Props, State> {
+export class HeaderAtom extends React.Component<Props, State> {
   state: State = {
     clipboardButtonClicked: false,
   }
@@ -54,6 +54,6 @@ export class RoomTitleAtom extends React.Component<Props, State> {
   }
 }
 
-export const RoomTitle = connect<StateProps, {}, OwnProps>((state: ClientState) => ({
+export const Header = connect<StateProps, {}, OwnProps>((state: ClientState) => ({
   room: state.room,
-}))(RoomTitleAtom)
+}))(HeaderAtom)

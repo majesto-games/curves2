@@ -7,17 +7,6 @@ import * as actions from "./actions"
 
 type ConnectionAction = ActionType<typeof actions>
 
-export interface ConnectionGroup {
-  send: (action: ConnectionAction) => void
-  host: () => void
-  join: (room?: string) => void
-  leave: () => void
-}
-
-export type ConnectionGroupConstructor = {
-  new (dispatch: Dispatch<ConnectionAction>): ConnectionGroup
-}
-
 export class LocalGroup {
   members: number[] = []
 
