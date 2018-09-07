@@ -1,3 +1,4 @@
+import { AnyAction } from "redux"
 import { createAction } from "typesafe-actions"
 
 import { LocalGroup, OnlineGroup } from "./groups"
@@ -16,6 +17,17 @@ export const createLocalGroup = createAction("createLocalGroup", (resolve) => (i
   resolve({ instance }),
 )
 export const leaveRoom = createAction("leaveRoom", (resolve) => () => resolve())
+export const addRoom = createAction("addRoom", (resolve) => (name: string, host: number) => resolve({ name, host }))
+export const addRoomPlayer = createAction("addRoomPlayer", (resolve) => (roomName: string, id: number) =>
+  resolve({ roomName, id }),
+)
+export const removeRoom = createAction("removeRoom", (resolve) => (name: string) => resolve({ name }))
+export const removeRoomPlayer = createAction("removeRoomPlayer", (resolve) => (roomName: string, id: number) =>
+  resolve({ roomName, id }),
+)
+export const rooms = createAction("rooms", (resolve) => (rooms: Record<string, number[]>) => resolve({ rooms }))
+// export const rooms = createAction("rooms", (resolve) => (rooms: string[]) => resolve({ rooms }))
+export const gossip = createAction("gossip", (resolve) => (action: AnyAction) => resolve({ action }))
 export const removeGroup = createAction("removeGroup", (resolve) => () => resolve())
 export const disconnect = createAction("disconnect", (resolve) => (reason: "hostDisconnect" | "offline") =>
   resolve({ reason }),

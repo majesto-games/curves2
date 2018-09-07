@@ -1,16 +1,17 @@
 import { MessageBarType } from "office-ui-fabric-react"
 import { combineEpics, Epic } from "redux-observable"
-import { filter, ignoreElements, map, tap } from "rxjs/operators"
+import { catchError, filter, ignoreElements, map, tap } from "rxjs/operators"
 import { ActionType, isActionOf } from "typesafe-actions"
 
-import { clientStore, history } from "."
+import { clientStore, gossip, history } from "."
 import * as actions from "./actions"
+import { GossipAction } from "./gossip"
 import { LocalGroup, OnlineGroup } from "./groups"
 import { ClientState } from "./stores/client"
 
 export type RootAction = ActionType<typeof actions>
 
-const notifyWhenDisconnected: Epic<RootAction> = (action$) =>
+const notifyWhenDisconnected: Epic<RootAction, RootAction, ClientState> = (action$) =>
   action$.pipe(
     filter(isActionOf(actions.disconnect)),
     tap((action) => {
@@ -155,16 +156,44 @@ const addLocalPlayerToLocalRoom: Epic<RootAction, RootAction, ClientState> = (ac
     ignoreElements(),
   )
 
-export const rootEpic = combineEpics(
-  notifyWhenDisconnected,
-  notifyWhenPlayerJoins,
-  notifyWhenPlayerLeaves,
-  notifyWhenCreatedOnlineRoom,
-  createGroupWhenCreatingOnlineRoom,
-  createGroupWhenCreatingLocalRoom,
-  createGroupWhenJoiningRoom,
-  addLocalPlayerToOnlineRoom,
-  addLocalPlayerToLocalRoom,
-  redirectWhenCreatedOnlineRoom,
-  removeGroupWhenLeavingRoom,
-)
+const gossipRoomActions: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf([actions.createdOnlineRoom, actions.leaveRoom, actions.joinOnlineRoom])),
+    map((action) => gossip(action as GossipAction)),
+  )
+
+// export const rootEpic = combineEpics(
+//   notifyWhenDisconnected,
+//   notifyWhenPlayerJoins,
+//   notifyWhenPlayerLeaves,
+//   notifyWhenCreatedOnlineRoom,
+//   createGroupWhenCreatingOnlineRoom,
+//   createGroupWhenCreatingLocalRoom,
+//   createGroupWhenJoiningRoom,
+//   addLocalPlayerToOnlineRoom,
+//   addLocalPlayerToLocalRoom,
+//   redirectWhenCreatedOnlineRoom,
+//   removeGroupWhenLeavingRoom,
+//   gossipRoomActions,
+// )
+
+export const rootEpic: Epic<RootAction, RootAction> = (action$, state$, dependencies) =>
+  combineEpics(
+    notifyWhenDisconnected,
+    notifyWhenPlayerJoins,
+    notifyWhenPlayerLeaves,
+    notifyWhenCreatedOnlineRoom,
+    createGroupWhenCreatingOnlineRoom,
+    createGroupWhenCreatingLocalRoom,
+    createGroupWhenJoiningRoom,
+    addLocalPlayerToOnlineRoom,
+    addLocalPlayerToLocalRoom,
+    redirectWhenCreatedOnlineRoom,
+    removeGroupWhenLeavingRoom,
+    gossipRoomActions,
+  )(action$, state$, dependencies).pipe(
+    catchError((e) => {
+      console.error(e)
+      throw e
+    }),
+  )

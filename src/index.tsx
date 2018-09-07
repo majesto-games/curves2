@@ -9,6 +9,7 @@ import { Provider } from "react-redux"
 import { Router } from "react-router-dom"
 
 import { App } from "./components"
+import { configureGossip } from "./gossip"
 import { configureStore as configureClientStore } from "./stores/client"
 import { theme } from "./theme"
 
@@ -19,6 +20,7 @@ initializeIcons()
 loadTheme(theme)
 
 export const clientStore = configureClientStore()
+export const gossip = configureGossip(clientStore.dispatch)
 
 ReactDOM.render(
   <Fabric>

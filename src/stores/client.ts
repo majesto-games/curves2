@@ -46,6 +46,7 @@ export type ClientState = {
   room: RoomState
   tails: { [owner: number]: ClientTail }
   messages: Message[]
+  rooms: Record<string, number[]>
 }
 
 const initialRoomState: RoomState = {
@@ -59,6 +60,7 @@ const initialState: ClientState = {
   room: initialRoomState,
   tails: [{ meshes }],
   messages: [],
+  rooms: {},
 }
 
 const reducer = (state: ClientState = initialState, action: GameAction): ClientState => {
@@ -123,6 +125,46 @@ const reducer = (state: ClientState = initialState, action: GameAction): ClientS
     const { instance } = action.payload
 
     return { ...state, room: { ...state.room, group: { online: false, instance } } }
+  }
+
+  if (action.type === getType(actions.addRoom)) {
+    const { name, host } = action.payload
+
+    return { ...state, rooms: { ...state.rooms, [name]: [host] } }
+  }
+
+  if (action.type === getType(actions.rooms)) {
+    const { rooms } = action.payload
+
+    return { ...state, rooms: rooms }
+  }
+
+  if (action.type === getType(actions.removeRoom)) {
+    const { name } = action.payload
+
+    const rooms = state.rooms
+    delete rooms[name]
+
+    return { ...state, rooms }
+  }
+
+  if (action.type === getType(actions.addRoomPlayer)) {
+    const { roomName, id } = action.payload
+
+    return { ...state, rooms: { ...state.rooms, [roomName]: state.rooms[roomName].concat([id]) } }
+  }
+
+  if (action.type === getType(actions.removeRoomPlayer)) {
+    const { roomName, id } = action.payload
+
+    if (!state.rooms[roomName]) {
+      return state
+    }
+
+    return {
+      ...state,
+      rooms: { ...state.rooms, [roomName]: state.rooms[roomName].filter((mId) => mId !== id) },
+    }
   }
 
   if (action.type === getType(actions.addTail)) {

@@ -1,3 +1,5 @@
+import { WebGroup, WebGroupOptions } from "netflux"
+
 export type PlayerID = number
 export type VerticeGroup = [number, number, number, number, number, number, number, number]
 
@@ -21,3 +23,26 @@ export function mergeUint16(a: Uint16Array, b: Uint16Array): Uint16Array {
 
   return c
 }
+
+type HandlerName = "onMemberJoin" | "onMemberLeave" | "onMessage" | "onStateChange"
+type Handlers = { [N in HandlerName]?: NonNullable<typeof WebGroup.prototype[N]> | undefined }
+
+/**
+ * Set event handlers for a group instance
+ * @param instance WebGroup instance to apply handlers to
+ * @param handlers Map of event handlers
+ */
+const setWebGroupEventHandlers = (instance: WebGroup, handlers?: Handlers) => {
+  if (handlers) {
+    for (const name in handlers) {
+      if (handlers[name]) {
+        instance[name] = handlers[name]
+      }
+    }
+  }
+
+  return instance
+}
+
+export const configureWebGroup = (handlers?: Handlers, options?: WebGroupOptions) =>
+  setWebGroupEventHandlers(new WebGroup(options), handlers)
