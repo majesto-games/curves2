@@ -1,11 +1,11 @@
 import { DataType, WebGroup, WebGroupState } from "netflux"
-import * as RArray from "r-array"
+import RArray from "r-array"
 import { Subject } from "rxjs"
 import { filter, map } from "rxjs/operators"
 
 import { DataStream } from "./datastream"
 
-export const configureMesh = (webGroup: WebGroup, model: any = new RArray()): any => {
+export const configureMesh = (webGroup: WebGroup, model = new RArray<string>()) => {
   const message$ = new Subject<[number, DataType]>()
   const state$ = new Subject<WebGroupState>()
   const dataStreams: Record<number, DataStream> = {}
