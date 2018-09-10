@@ -26,7 +26,12 @@ export const configureGossip = (dispatch: Dispatch<AnyAction>) => {
 
   return (action: GossipAction) => {
     if (action.type === "leaveRoom") {
-      // TODO: Remove room from roomListModel if I am the host
+      const { name, isHost } = action.payload
+
+      if (isHost) {
+        const index = roomListModel.indexOf(name)
+        roomListModel.splice(Number(index), 1) // I have no idea why i need to force the index to be a number
+      }
     }
 
     if (action.type === "createdOnlineRoom") {
@@ -34,7 +39,5 @@ export const configureGossip = (dispatch: Dispatch<AnyAction>) => {
 
       roomListModel.push(name)
     }
-
-    return actions.gossip(action)
   }
 }

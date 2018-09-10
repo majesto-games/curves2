@@ -13,7 +13,7 @@ export class DataStream extends Duplex {
   constructor(
     message$: Observable<DataType>,
     state$: Observable<WebGroupState>,
-    private broadcast: (data: DataType) => void,
+    private send: (data: DataType) => void,
   ) {
     super({ decodeStrings: false })
 
@@ -54,7 +54,7 @@ export class DataStream extends Duplex {
     const result =
       this.connectionState === WebGroupState.JOINING
         ? this.writeQueue.push([chunk, encoding, callback])
-        : this.send(chunk, encoding, callback)
+        : this._send(chunk, encoding, callback)
 
     return result
   }
@@ -67,7 +67,7 @@ export class DataStream extends Duplex {
     }
 
     while (this.writeQueue.length > 0) {
-      this.send.apply(this.writeQueue.shift()!)
+      this._send.apply(this.writeQueue.shift()!)
     }
   }
 
@@ -88,9 +88,9 @@ export class DataStream extends Duplex {
     }
   }
 
-  private send(chunk: DataType, encoding: "buffer", callback: (error?: Error | null) => void) {
+  private _send(chunk: DataType, encoding: "buffer", callback: (error?: Error | null) => void) {
     if (this.isClosed) return false
-    this.broadcast(chunk)
+    this.send(chunk)
     return callback()
   }
 }

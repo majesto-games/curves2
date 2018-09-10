@@ -5,9 +5,7 @@ import { filter, map } from "rxjs/operators"
 
 import { DataStream } from "./datastream"
 
-export const configureMesh = (webGroup: WebGroup): any => {
-  const model = new RArray()
-
+export const configureMesh = (webGroup: WebGroup, model: any = new RArray()): any => {
   const message$ = new Subject<[number, DataType]>()
   const state$ = new Subject<WebGroupState>()
   const dataStreams: Record<number, DataStream> = {}
@@ -23,15 +21,18 @@ export const configureMesh = (webGroup: WebGroup): any => {
         map(([_, data]) => data),
       ),
       state$,
-      (data) => webGroup.send(data),
+      (data) => webGroup.sendTo(id, data),
     )
 
     reader.pipe(stream).pipe(writer)
-    writer.on("sync", model.emit.bind(model, "sync"))
+    writer.on("sync", () => model.emit("sync"))
 
     dataStreams[id] = stream
   }
-  webGroup.onMemberLeave = (id) => dataStreams[id].close()
+  webGroup.onMemberLeave = (id) => {
+    dataStreams[id].close()
+    delete dataStreams[id]
+  }
 
   return model
 }

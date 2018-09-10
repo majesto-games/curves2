@@ -159,7 +159,8 @@ const addLocalPlayerToLocalRoom: Epic<RootAction, RootAction, ClientState> = (ac
 const gossipRoomActions: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf([actions.createdOnlineRoom, actions.leaveRoom, actions.joinOnlineRoom])),
-    map((action) => gossip(action as GossipAction)),
+    tap((action) => gossip(action as GossipAction)),
+    ignoreElements(),
   )
 
 // export const rootEpic = combineEpics(

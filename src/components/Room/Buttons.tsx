@@ -6,7 +6,7 @@ import { history } from "../.."
 import * as actions from "../../actions"
 import { ClientState } from "../../stores/client"
 
-export const RoomButtonsAtom: React.SFC<Props> = ({ isHost, leaveRoom, addLocalPlayer }) => (
+export const RoomButtonsAtom: React.SFC<Props> = ({ isHost, leaveRoom, addLocalPlayer, roomName }) => (
   <div className="HeaderButtons">
     <CompoundButton
       disabled={!isHost}
@@ -32,7 +32,7 @@ export const RoomButtonsAtom: React.SFC<Props> = ({ isHost, leaveRoom, addLocalP
       iconProps={{ iconName: "Leave" }}
       text="Leave room"
       secondaryText="Leave room"
-      onClick={() => leaveRoom()}
+      onClick={() => leaveRoom(roomName!, isHost)}
     />
   </div>
 )
@@ -41,6 +41,7 @@ type Props = OwnProps & StateProps & DispatchProps
 
 type StateProps = {
   isHost: boolean
+  roomName: string | null
 }
 type DispatchProps = {
   leaveRoom: typeof actions.leaveRoom
@@ -49,6 +50,6 @@ type DispatchProps = {
 type OwnProps = {}
 
 export const RoomButtons = connect<StateProps, DispatchProps, OwnProps>(
-  (state: ClientState) => ({ isHost: state.room.isHost }),
+  (state: ClientState) => ({ isHost: state.room.isHost, roomName: state.room.name }),
   { leaveRoom: actions.leaveRoom, addLocalPlayer: actions.addLocalPlayer },
 )(RoomButtonsAtom)
