@@ -10,7 +10,7 @@ export const RoomListAtom: React.SFC<Props> = ({ rooms, joinOnlineRoom }) => (
     {rooms.length > 0 ? (
       <DetailsList
         selectionMode={SelectionMode.none}
-        items={rooms.map(({ name, players }) => ({ name, playerCount: players.length }))}
+        items={rooms.map((name) => ({ name, playerCount: "1+" }))}
         columns={[
           {
             key: "c1",
@@ -55,7 +55,7 @@ export const RoomListAtom: React.SFC<Props> = ({ rooms, joinOnlineRoom }) => (
 type Props = OwnProps & StateProps & DispatchProps
 
 type StateProps = {
-  rooms: { name: string; players: number[] }[]
+  rooms: string[]
 }
 type DispatchProps = {
   joinOnlineRoom: typeof actions.joinOnlineRoom
@@ -63,6 +63,6 @@ type DispatchProps = {
 type OwnProps = {}
 
 export const RoomList = connect<StateProps, DispatchProps, OwnProps>(
-  (state: ClientState) => ({ rooms: Object.keys(state.rooms).map((name) => ({ name, players: state.rooms[name] })) }),
+  (state: ClientState) => ({ rooms: state.rooms }),
   { joinOnlineRoom: actions.joinOnlineRoom },
 )(RoomListAtom)

@@ -497,6 +497,14 @@ assert@^1.1.1:
   dependencies:
     util "0.10.3"
 
+assertions@~2.3.1:
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/assertions/-/assertions-2.3.4.tgz#a9433ced1fce57cc999af0965d1008e96c2796e6"
+  dependencies:
+    fomatto "git://github.com/BonsaiDen/Fomatto.git#468666f600b46f9067e3da7200fd9df428923ea6"
+    render "0.1"
+    traverser "1"
+
 assign-symbols@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/assign-symbols/-/assign-symbols-1.0.0.tgz#59667f41fadd4f20ccbc2bb96b8d4f7f78ec0367"
@@ -1222,6 +1230,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+between@~0.1, between@~0.1.1:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/between/-/between-0.1.3.tgz#f2a935d3b9044e3cc72a77eb0f41f83e0839fd54"
+
 big.js@^3.1.3:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-3.2.0.tgz#a5fc298b81b9e0dca2e458824784b65c52ba588e"
@@ -1897,6 +1909,14 @@ cpx@^1.5.0:
     shell-quote "^1.6.1"
     subarg "^1.0.0"
 
+crdt@^3.6.4:
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/crdt/-/crdt-3.6.4.tgz#8473aed93ac71953f3a1df0f8ac7f97bfef6b8d5"
+  dependencies:
+    between "~0.1"
+    it-is "~1.0.3"
+    scuttlebutt ">=5.6.6 <6"
+
 create-ecdh@^4.0.0:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/create-ecdh/-/create-ecdh-4.0.3.tgz#c9111b6f33045c4697f144787f9254cdc77c45ff"
@@ -2087,6 +2107,10 @@ currently-unhandled@^0.4.1:
   resolved "https://registry.yarnpkg.com/currently-unhandled/-/currently-unhandled-0.4.1.tgz#988df33feab191ef799a61369dd76c17adf957ea"
   dependencies:
     array-find-index "^1.0.1"
+
+curry@0.0.x:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/curry/-/curry-0.0.4.tgz#1750d518d919c44f3d37ff44edc693de1f0d5fcb"
 
 cyclist@~0.2.2:
   version "0.2.2"
@@ -2368,6 +2392,10 @@ dotenv-expand@4.2.0:
 dotenv@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
+
+duplex@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/duplex/-/duplex-1.0.0.tgz#6abc5c16ec17e4c578578727126700590d3a2dda"
 
 duplexer3@^0.1.4:
   version "0.1.4"
@@ -2954,6 +2982,10 @@ follow-redirects@^1.0.0:
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.7.tgz#a39e4804dacb90202bca76a9e2ac10433ca6a69a"
   dependencies:
     debug "^3.1.0"
+
+"fomatto@git://github.com/BonsaiDen/Fomatto.git#468666f600b46f9067e3da7200fd9df428923ea6":
+  version "0.6.0"
+  resolved "git://github.com/BonsaiDen/Fomatto.git#468666f600b46f9067e3da7200fd9df428923ea6"
 
 for-in@^1.0.1, for-in@^1.0.2:
   version "1.0.2"
@@ -3887,7 +3919,7 @@ is-symbol@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-symbol/-/is-symbol-1.0.1.tgz#3cc59f00025194b6ab2e38dbae6689256b660572"
 
-is-typedarray@~1.0.0:
+is-typedarray@^1.0.0, is-typedarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-typedarray/-/is-typedarray-1.0.0.tgz#e479c80858df0c1b11ddda6940f96011fcda4a9a"
 
@@ -4019,6 +4051,20 @@ istanbul-reports@^1.4.1:
   resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-1.5.0.tgz#c6c2867fa65f59eb7dcedb7f845dfc76aaee70f9"
   dependencies:
     handlebars "^4.0.11"
+
+it-is@~1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/it-is/-/it-is-1.0.3.tgz#469700819838a4656ed4f176953f5bfcf53f483b"
+  dependencies:
+    assertions "~2.3.1"
+    render "~0.1.4"
+    style "0.1.x"
+    traverser "0.0.x"
+    trees "0.0.x"
+
+iterate@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/iterate/-/iterate-0.1.0.tgz#577074e0cc73bb29b558cc56482bf16f316aa5f0"
 
 jest-changed-files@^22.2.0:
   version "22.4.3"
@@ -4881,6 +4927,10 @@ mkdirp@0.5.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   resolved "http://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
+
+monotonic-timestamp@~0.0.8:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/monotonic-timestamp/-/monotonic-timestamp-0.0.9.tgz#5ba5adc7aac85e1d7ce77be847161ed246b39603"
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -5960,6 +6010,13 @@ querystringify@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.0.0.tgz#fa3ed6e68eb15159457c89b37bc6472833195755"
 
+r-array@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/r-array/-/r-array-0.5.3.tgz#d00645b8e340be4bc533b45595e224445c14a82d"
+  dependencies:
+    between "~0.1.1"
+    scuttlebutt "~5.5"
+
 raf@3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/raf/-/raf-3.4.0.tgz#a28876881b4bc2ca9117d4138163ddb80f781575"
@@ -6376,6 +6433,12 @@ remove-trailing-separator@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"
 
+render@0.1, render@~0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/render/-/render-0.1.4.tgz#cfb33a34e26068591d418469e23d8cc5ce1ceff5"
+  dependencies:
+    traverser "0.0.x"
+
 renderkid@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/renderkid/-/renderkid-2.0.1.tgz#898cabfc8bede4b7b91135a3ffd323e58c0db319"
@@ -6615,6 +6678,24 @@ schema-utils@^0.4.5:
     ajv "^6.1.0"
     ajv-keywords "^3.1.0"
 
+"scuttlebutt@>=5.6.6 <6", scuttlebutt@^5.6.15:
+  version "5.6.15"
+  resolved "https://registry.yarnpkg.com/scuttlebutt/-/scuttlebutt-5.6.15.tgz#8599a8fa5c3ebb1867d1c5c39ea719f4ed6d7a88"
+  dependencies:
+    duplex "~1.0.0"
+    iterate "0.1.0"
+    monotonic-timestamp "~0.0.8"
+    stream-serializer "1.1.2"
+
+scuttlebutt@~5.5:
+  version "5.5.20"
+  resolved "https://registry.yarnpkg.com/scuttlebutt/-/scuttlebutt-5.5.20.tgz#1b3f35e68f53e17bd50985d5f10993bff4dacfa6"
+  dependencies:
+    duplex "~1.0.0"
+    iterate "0.1.0"
+    monotonic-timestamp "~0.0.8"
+    stream-serializer "1.0.0"
+
 select-hose@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
@@ -6749,6 +6830,44 @@ shell-quote@1.6.1, shell-quote@^1.6.1:
 shellwords@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
+
+should-equal@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/should-equal/-/should-equal-2.0.0.tgz#6072cf83047360867e68e98b09d71143d04ee0c3"
+  dependencies:
+    should-type "^1.4.0"
+
+should-format@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/should-format/-/should-format-3.0.3.tgz#9bfc8f74fa39205c53d38c34d717303e277124f1"
+  dependencies:
+    should-type "^1.3.0"
+    should-type-adaptors "^1.0.1"
+
+should-type-adaptors@^1.0.1:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/should-type-adaptors/-/should-type-adaptors-1.1.0.tgz#401e7f33b5533033944d5cd8bf2b65027792e27a"
+  dependencies:
+    should-type "^1.3.0"
+    should-util "^1.0.0"
+
+should-type@^1.3.0, should-type@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/should-type/-/should-type-1.4.0.tgz#0756d8ce846dfd09843a6947719dfa0d4cff5cf3"
+
+should-util@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/should-util/-/should-util-1.0.0.tgz#c98cda374aa6b190df8ba87c9889c2b4db620063"
+
+should@>=0.0.4:
+  version "13.2.3"
+  resolved "https://registry.yarnpkg.com/should/-/should-13.2.3.tgz#96d8e5acf3e97b49d89b51feaa5ae8d07ef58f10"
+  dependencies:
+    should-equal "^2.0.0"
+    should-format "^3.0.3"
+    should-type "^1.4.0"
+    should-type-adaptors "^1.0.1"
+    should-util "^1.0.0"
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
@@ -6999,6 +7118,14 @@ stream-http@^2.7.2:
     to-arraybuffer "^1.0.0"
     xtend "^4.0.0"
 
+stream-serializer@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/stream-serializer/-/stream-serializer-1.0.0.tgz#aa212f343920f8cc6affc65c240ba700eb6c49b9"
+
+stream-serializer@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/stream-serializer/-/stream-serializer-1.1.2.tgz#c1f97d15da251f594ae27d41ec8ada09a846e34f"
+
 stream-shift@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.0.tgz#d5c752825e5367e786f78e18e445ea223a155952"
@@ -7091,6 +7218,12 @@ style-loader@0.19.0:
   dependencies:
     loader-utils "^1.0.2"
     schema-utils "^0.3.0"
+
+style@0.1.x:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/style/-/style-0.1.1.tgz#e2fab65b1b81d3e00ebcad854cc584ba231f256d"
+  dependencies:
+    curry "0.0.x"
 
 subarg@^1.0.0:
   version "1.0.0"
@@ -7299,6 +7432,26 @@ tr46@^1.0.1:
   dependencies:
     punycode "^2.1.0"
 
+traverser@0.0.x:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/traverser/-/traverser-0.0.5.tgz#c66f38c456a0c21a88014b1223580c7ebe0631eb"
+  dependencies:
+    curry "0.0.x"
+
+traverser@1:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/traverser/-/traverser-1.0.0.tgz#6f59e5813759aeeab3646b8f4513fd4a62e4fe20"
+  dependencies:
+    curry "0.0.x"
+
+trees@0.0.x:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/trees/-/trees-0.0.4.tgz#2f51fd9b5f6486f732c97e11ee75667236be1d59"
+  dependencies:
+    should ">=0.0.4"
+    style "0.1.x"
+    traverser "0.0.x"
+
 trim-newlines@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/trim-newlines/-/trim-newlines-1.0.0.tgz#5887966bb582a4503a41eb524f7d35011815a613"
@@ -7421,6 +7574,12 @@ type-is@~1.6.15, type-is@~1.6.16:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.18"
+
+typedarray-to-buffer@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/typedarray-to-buffer/-/typedarray-to-buffer-3.1.5.tgz#a97ee7a9ff42691b9f783ff1bc5112fe3fca9080"
+  dependencies:
+    is-typedarray "^1.0.0"
 
 typedarray@^0.0.6:
   version "0.0.6"
