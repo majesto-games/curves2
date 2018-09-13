@@ -24,7 +24,7 @@ export function mergeUint16(a: Uint16Array, b: Uint16Array): Uint16Array {
   return c
 }
 
-type HandlerName = "onMemberJoin" | "onMemberLeave" | "onMessage" | "onStateChange"
+type HandlerName = "onMemberJoin" | "onMemberLeave" | "onMessage" | "onStateChange" | "onSignalingStateChange"
 type Handlers = { [N in HandlerName]?: NonNullable<typeof WebGroup.prototype[N]> | undefined }
 
 /**
@@ -46,3 +46,18 @@ const setWebGroupEventHandlers = (instance: WebGroup, handlers?: Handlers) => {
 
 export const configureWebGroup = (handlers?: Handlers, options?: WebGroupOptions) =>
   setWebGroupEventHandlers(new WebGroup(options), handlers)
+
+export const supportsWebRTC = (): Promise<boolean> =>
+  new Promise((resolve) => {
+    var pc = new RTCPeerConnection({ iceServers: [] })
+    pc.createDataChannel("") //create a bogus data channel
+    pc.onicecandidate = (ice) => {
+      //listen for candidate events
+      resolve(ice.candidate !== null)
+      // if (!ice || !ice.candidate || !ice.candidate.candidate) return
+      // var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
+      // pc.onicecandidate = function() {}
+    }
+    //@ts-ignore
+    pc.createOffer(pc.setLocalDescription.bind(pc), function() {}) // create offer and set local description
+  })

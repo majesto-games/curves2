@@ -10,8 +10,19 @@ export const configureMesh = (webGroup: WebGroup, model = new RArray<string>()) 
   const state$ = new Subject<WebGroupState>()
   const dataStreams: Record<number, DataStream> = {}
 
-  webGroup.onMessage = (id, data) => message$.next([id, data])
-  webGroup.onStateChange = (state) => state$.next(state)
+  const onMessage = webGroup.onMessage
+  webGroup.onMessage = (id, data) => {
+    message$.next([id, data])
+    onMessage && onMessage.call(webGroup, id, data)
+  }
+
+  const onStateChange = webGroup.onStateChange
+  webGroup.onStateChange = (state) => {
+    state$.next(state)
+    onStateChange && onStateChange.call(webGroup, state)
+  }
+
+  const onMemberJoin = webGroup.onMemberJoin
   webGroup.onMemberJoin = (id) => {
     const reader = model.createReadStream()
     const writer = model.createWriteStream()
@@ -28,10 +39,15 @@ export const configureMesh = (webGroup: WebGroup, model = new RArray<string>()) 
     writer.on("sync", () => model.emit("sync"))
 
     dataStreams[id] = stream
+    onMemberJoin && onMemberJoin.call(webGroup, id)
   }
+
+  const onMemberLeave = webGroup.onMemberLeave
   webGroup.onMemberLeave = (id) => {
     dataStreams[id].close()
     delete dataStreams[id]
+
+    onMemberLeave && onMemberLeave.call(webGroup, id)
   }
 
   return model
