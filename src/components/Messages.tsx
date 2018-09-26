@@ -22,7 +22,7 @@ export const MessagesAtom: React.SFC<Props> = ({ messages, dismissMessage }) => 
   <div className="Messages">
     <TransitionGroup component={null}>
       {messages.map((message) => (
-        <CSSTransition key={message.text} classNames="fade" timeout={4000} onEntered={() => dismissMessage()}>
+        <CSSTransition key={message.text} classNames="fade" timeout={2000} onEntered={() => dismissMessage()}>
           <MessageBar messageBarType={message.type} isMultiline={false}>
             {message.text}
           </MessageBar>
