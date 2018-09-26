@@ -1,7 +1,7 @@
 import { MessageBarType } from "office-ui-fabric-react"
 import { combineEpics, Epic } from "redux-observable"
 import { of } from "rxjs"
-import { catchError, filter, first, ignoreElements, map, mergeMap, tap } from "rxjs/operators"
+import { catchError, delay, filter, first, ignoreElements, map, mergeMap, takeUntil, tap } from "rxjs/operators"
 import { ActionType, isActionOf } from "typesafe-actions"
 
 import { clientStore, gossip, history } from "."
@@ -23,12 +23,14 @@ const notifyWhenDisconnected: Epic<RootAction, RootAction, ClientState> = (actio
     map(({ payload: { reason } }) => {
       if (reason === "hostDisconnect") {
         return actions.showMessage({
+          id: String(Date.now()),
           type: MessageBarType.error,
           text: "The room has been destroyed because of the host disconnecting.",
         })
       }
 
       return actions.showMessage({
+        id: String(Date.now()),
         type: MessageBarType.error,
         text: "Network disconnected.",
       })
@@ -42,6 +44,7 @@ const notifyWhenPlayerJoins: Epic<RootAction, RootAction, ClientState> = (action
     filter(() => state$.value.room.players.length > 1),
     map(({ payload: { id } }) =>
       actions.showMessage({
+        id: String(Date.now()),
         type: MessageBarType.info,
         text: id + " joined the room.",
       }),
@@ -55,17 +58,19 @@ const notifyWhenPlayerLeaves: Epic<RootAction, RootAction, ClientState> = (actio
     filter(() => state$.value.room.players.length > 0),
     map(({ payload: { id } }) =>
       actions.showMessage({
+        id: String(Date.now()),
         type: MessageBarType.info,
         text: id + " left the room.",
       }),
     ),
   )
 
-const notifyWhenCreatedOnlineRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+const notifyWhenCreatedOnlineRoom: Epic<RootAction, RootAction, ClientState> = (action$) =>
   action$.pipe(
     filter(isActionOf(actions.createdOnlineRoom)),
     map(({ payload: { name } }) =>
       actions.showMessage({
+        id: String(Date.now()),
         type: MessageBarType.success,
         text: "Successfully created room '" + name + "'.",
       }),
@@ -108,7 +113,7 @@ const createGroupWhenCreatingLocalRoom: Epic<RootAction, RootAction, ClientState
     map((group) => actions.createLocalGroup(group)),
   )
 
-const createGroupWhenJoiningRoom: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+const createGroupWhenJoiningRoom: Epic<RootAction, RootAction, ClientState> = (action$) =>
   action$.pipe(
     filter(isActionOf(actions.joinOnlineRoom)),
     tap(({ payload: { name } }) => {
@@ -158,20 +163,21 @@ const addLocalPlayerToLocalRoom: Epic<RootAction, RootAction, ClientState> = (ac
     ignoreElements(),
   )
 
-const gossipRoomActions: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+const gossipRoomActions: Epic<RootAction, RootAction, ClientState> = (action$) =>
   action$.pipe(
     filter(isActionOf([actions.createdOnlineRoom, actions.leaveRoom, actions.joinOnlineRoom])),
     tap((action) => gossip(action as GossipAction)),
     ignoreElements(),
   )
 
-const checkWebRTC: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+const checkWebRTC: Epic<RootAction, RootAction, ClientState> = (_, state$) =>
   state$.pipe(
     filter(() => !supportsWebRTC()),
     first(),
     mergeMap(() =>
       of(
         actions.showMessage({
+          id: String(Date.now()),
           type: MessageBarType.error,
           text: "WebRTC is not supported by your browser. Online play is disabled!",
         }),
@@ -180,9 +186,27 @@ const checkWebRTC: Epic<RootAction, RootAction, ClientState> = (action$, state$)
     ),
   )
 
+const dismissMessages: Epic<RootAction, RootAction, ClientState> = (action$) =>
+  action$.pipe(
+    filter(isActionOf(actions.showMessage)),
+    mergeMap(({ payload: { id } }) =>
+      of(actions.dismissMessage(id)).pipe(
+        delay(3000),
+        takeUntil(
+          action$.pipe(
+            filter(isActionOf(actions.dismissMessage)),
+            filter(({ payload }) => id === payload),
+            first(),
+          ),
+        ),
+      ),
+    ),
+  )
+
 export const rootEpic: Epic<RootAction, RootAction> = (action$, state$, dependencies) =>
   combineEpics(
     checkWebRTC,
+    dismissMessages,
     notifyWhenDisconnected,
     notifyWhenPlayerJoins,
     notifyWhenPlayerLeaves,

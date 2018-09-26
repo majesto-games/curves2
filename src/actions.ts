@@ -34,6 +34,6 @@ export const addTail = createAction("addTail", (resolve) => (vertices: VerticeGr
 )
 
 export const showMessage = createAction("showMessage", (resolve) => (message: Message) => resolve(message))
-export const dismissMessage = createAction("dismissMessage", (resolve) => () => resolve())
+export const dismissMessage = createAction("dismissMessage", (resolve) => (id: string) => resolve(id))
 
-export const onlineStatus = createAction("onlineStatus", (resolve) => (online: boolean) => resolve(online))
+export const onlineStatus = createAction("onlineStatus", (resolve) => (status: boolean) => resolve(status))

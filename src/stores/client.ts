@@ -40,7 +40,7 @@ export type RoomState = {
   group: { online: true; instance: OnlineGroup } | { online: false; instance: LocalGroup } | null
 }
 
-export type Message = { type: MessageBarType; text: string }
+export type Message = { id: string; type: MessageBarType; text: string }
 
 export type ClientState = {
   room: RoomState
@@ -104,7 +104,7 @@ const reducer = (state: ClientState = initialState, action: GameAction): ClientS
   }
 
   if (action.type === getType(actions.dismissMessage)) {
-    return { ...state, messages: state.messages.slice(1) }
+    return { ...state, messages: state.messages.filter((message) => message.id !== action.payload) }
   }
 
   if (action.type === getType(actions.createdOnlineRoom)) {
