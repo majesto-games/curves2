@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 
 import * as actions from "../actions"
-import { ClientState, Message } from "../stores/client"
+import { ClientState, Message, MESSAGE_TIMEOUT } from "../stores/client"
 
 type StateProps = {
   messages: Message[]
@@ -22,7 +22,7 @@ export const MessagesAtom: React.SFC<Props> = ({ messages, dismissMessage }) => 
   <div className="Messages">
     <TransitionGroup component={null} appear>
       {messages.map((message) => (
-        <CSSTransition key={message.text} classNames="fade" timeout={{ enter: 2750, exit: 250 }}>
+        <CSSTransition key={message.text} classNames="fade" timeout={{ enter: MESSAGE_TIMEOUT - 250, exit: 250 }}>
           <MessageBar messageBarType={message.type} onDismiss={() => dismissMessage(message.id)}>
             {message.text}
           </MessageBar>

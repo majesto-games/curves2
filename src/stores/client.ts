@@ -42,6 +42,8 @@ export type RoomState = {
 
 export type Message = { id: string; type: MessageBarType; text: string }
 
+export const MESSAGE_TIMEOUT = 5000
+
 export type ClientState = {
   room: RoomState
   tails: { [owner: number]: ClientTail }

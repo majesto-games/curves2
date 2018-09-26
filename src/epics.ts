@@ -8,7 +8,7 @@ import { clientStore, gossip, history } from "."
 import * as actions from "./actions"
 import { GossipAction } from "./gossip"
 import { LocalGroup, OnlineGroup } from "./groups"
-import { ClientState } from "./stores/client"
+import { ClientState, MESSAGE_TIMEOUT } from "./stores/client"
 import { supportsWebRTC } from "./utils"
 
 export type RootAction = ActionType<typeof actions>
@@ -191,7 +191,7 @@ const dismissMessages: Epic<RootAction, RootAction, ClientState> = (action$) =>
     filter(isActionOf(actions.showMessage)),
     mergeMap(({ payload: { id } }) =>
       of(actions.dismissMessage(id)).pipe(
-        delay(3000),
+        delay(MESSAGE_TIMEOUT),
         takeUntil(
           action$.pipe(
             filter(isActionOf(actions.dismissMessage)),
