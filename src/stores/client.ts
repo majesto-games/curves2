@@ -47,6 +47,7 @@ export type ClientState = {
   tails: { [owner: number]: ClientTail }
   messages: Message[]
   rooms: string[]
+  online: boolean
 }
 
 const initialRoomState: RoomState = {
@@ -61,6 +62,7 @@ const initialState: ClientState = {
   tails: [{ meshes }],
   messages: [],
   rooms: [],
+  online: true,
 }
 
 const reducer = (state: ClientState = initialState, action: GameAction): ClientState => {
@@ -131,6 +133,10 @@ const reducer = (state: ClientState = initialState, action: GameAction): ClientS
     const { rooms } = action.payload
 
     return { ...state, rooms }
+  }
+
+  if (action.type === getType(actions.onlineStatus)) {
+    return { ...state, online: action.payload }
   }
 
   if (action.type === getType(actions.addTail)) {

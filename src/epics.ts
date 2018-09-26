@@ -1,6 +1,7 @@
 import { MessageBarType } from "office-ui-fabric-react"
 import { combineEpics, Epic } from "redux-observable"
-import { catchError, filter, ignoreElements, map, tap } from "rxjs/operators"
+import { of } from "rxjs"
+import { catchError, filter, first, ignoreElements, map, mergeMap, tap } from "rxjs/operators"
 import { ActionType, isActionOf } from "typesafe-actions"
 
 import { clientStore, gossip, history } from "."
@@ -8,6 +9,7 @@ import * as actions from "./actions"
 import { GossipAction } from "./gossip"
 import { LocalGroup, OnlineGroup } from "./groups"
 import { ClientState } from "./stores/client"
+import { supportsWebRTC } from "./utils"
 
 export type RootAction = ActionType<typeof actions>
 
@@ -163,23 +165,24 @@ const gossipRoomActions: Epic<RootAction, RootAction, ClientState> = (action$, s
     ignoreElements(),
   )
 
-// export const rootEpic = combineEpics(
-//   notifyWhenDisconnected,
-//   notifyWhenPlayerJoins,
-//   notifyWhenPlayerLeaves,
-//   notifyWhenCreatedOnlineRoom,
-//   createGroupWhenCreatingOnlineRoom,
-//   createGroupWhenCreatingLocalRoom,
-//   createGroupWhenJoiningRoom,
-//   addLocalPlayerToOnlineRoom,
-//   addLocalPlayerToLocalRoom,
-//   redirectWhenCreatedOnlineRoom,
-//   removeGroupWhenLeavingRoom,
-//   gossipRoomActions,
-// )
+const checkWebRTC: Epic<RootAction, RootAction, ClientState> = (action$, state$) =>
+  state$.pipe(
+    filter(() => !supportsWebRTC()),
+    first(),
+    mergeMap(() =>
+      of(
+        actions.showMessage({
+          type: MessageBarType.error,
+          text: "WebRTC is not supported by your browser. Online play is disabled!",
+        }),
+        actions.onlineStatus(false),
+      ),
+    ),
+  )
 
 export const rootEpic: Epic<RootAction, RootAction> = (action$, state$, dependencies) =>
   combineEpics(
+    checkWebRTC,
     notifyWhenDisconnected,
     notifyWhenPlayerJoins,
     notifyWhenPlayerLeaves,
