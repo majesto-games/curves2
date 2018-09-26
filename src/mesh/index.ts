@@ -12,18 +12,27 @@ export const configureMesh = (webGroup: WebGroup, model = new RArray<string>()) 
 
   const onMessage = webGroup.onMessage
   webGroup.onMessage = (id, data) => {
+    // console.log("mesh", "onMessage", data)
     message$.next([id, data])
-    onMessage && onMessage.call(webGroup, id, data)
+    if (onMessage) onMessage.call(webGroup, id, data)
   }
 
   const onStateChange = webGroup.onStateChange
   webGroup.onStateChange = (state) => {
+    // console.log("mesh", "onStateChange", WebGroupState[state])
     state$.next(state)
-    onStateChange && onStateChange.call(webGroup, state)
+    if (onStateChange) onStateChange.call(webGroup, state)
+  }
+
+  const onSignalingStateChange = webGroup.onSignalingStateChange
+  webGroup.onSignalingStateChange = (state) => {
+    // console.log("mesh", "onSignalingStateChange", SignalingState[state])
+    if (onSignalingStateChange) onSignalingStateChange.call(webGroup, state)
   }
 
   const onMemberJoin = webGroup.onMemberJoin
   webGroup.onMemberJoin = (id) => {
+    // console.log("mesh", "onMemberJoin")
     const reader = model.createReadStream()
     const writer = model.createWriteStream()
     const stream = new DataStream(
@@ -39,15 +48,16 @@ export const configureMesh = (webGroup: WebGroup, model = new RArray<string>()) 
     writer.on("sync", () => model.emit("sync"))
 
     dataStreams[id] = stream
-    onMemberJoin && onMemberJoin.call(webGroup, id)
+    if (onMemberJoin) onMemberJoin.call(webGroup, id)
   }
 
   const onMemberLeave = webGroup.onMemberLeave
   webGroup.onMemberLeave = (id) => {
+    // console.log("mesh", "onMemberLeave")
     dataStreams[id].close()
     delete dataStreams[id]
 
-    onMemberLeave && onMemberLeave.call(webGroup, id)
+    if (onMemberLeave) onMemberLeave.call(webGroup, id)
   }
 
   return model

@@ -67,7 +67,7 @@ export class DataStream extends Duplex {
     }
 
     while (this.writeQueue.length > 0) {
-      this._send.apply(this.writeQueue.shift()!)
+      this._send.apply(this, this.writeQueue.shift()!)
     }
   }
 
