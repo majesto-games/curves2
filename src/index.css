@@ -9,6 +9,7 @@
 
 :root {
   --green: #84dc2c;
+  --border-radius: 5px;
 }
 
 * {
@@ -69,7 +70,7 @@ body {
   margin: 0 3px;
   color: #202020;
   font-weight: bold;
-  border-radius: 5px !important;
+  border-radius: var(--border-radius) !important;
 }
 
 .RoomHeader {
@@ -191,7 +192,11 @@ body {
 }
 
 button {
-  border-radius: 5px !important;
+  border-radius: var(--border-radius) !important;
+}
+
+.ms-Dialog-main {
+  border-radius: var(--border-radius) !important;
 }
 
 @media only screen and (max-width: 768px) {
