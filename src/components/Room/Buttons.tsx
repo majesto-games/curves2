@@ -32,7 +32,7 @@ class SettingsButton extends React.Component<{ disabled?: boolean }, { dialogVis
           onClick={this.toggleDialog}
         />
         <Dialog
-          isOpen={this.state.dialogVisible}
+          hidden={!this.state.dialogVisible}
           onDismiss={this.toggleDialog}
           dialogContentProps={{ type: DialogType.normal, title: "Game settings" }}
           modalProps={{ isDarkOverlay: true }}
