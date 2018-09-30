@@ -2,7 +2,7 @@ import { AnyAction } from "redux"
 import { createAction } from "typesafe-actions"
 
 import { LocalGroup, OnlineGroup } from "./groups"
-import { Message } from "./stores/client"
+import { Message, Room } from "./stores/client"
 import { PlayerID, TailPart, VerticeGroup } from "./utils"
 
 export const createOnlineRoom = createAction("createOnlineRoom", (resolve) => () => resolve())
@@ -19,7 +19,7 @@ export const createLocalGroup = createAction("createLocalGroup", (resolve) => (i
 export const leaveRoom = createAction("leaveRoom", (resolve) => (name: string, isHost: boolean) =>
   resolve({ name, isHost }),
 )
-export const rooms = createAction("rooms", (resolve) => (rooms: string[]) => resolve({ rooms }))
+export const rooms = createAction("rooms", (resolve) => (rooms: Room[]) => resolve({ rooms }))
 // export const rooms = createAction("rooms", (resolve) => (rooms: string[]) => resolve({ rooms }))
 export const gossip = createAction("gossip", (resolve) => (action: AnyAction) => resolve({ action }))
 export const removeGroup = createAction("removeGroup", (resolve) => () => resolve())

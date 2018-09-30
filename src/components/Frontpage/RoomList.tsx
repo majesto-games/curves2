@@ -3,14 +3,14 @@ import * as React from "react"
 import { connect } from "react-redux"
 
 import * as actions from "../../actions"
-import { ClientState } from "../../stores/client"
+import { ClientState, Room } from "../../stores/client"
 
 export const RoomListAtom: React.SFC<Props> = ({ rooms, joinOnlineRoom }) => (
   <div className="RoomList">
     {rooms.length > 0 ? (
       <DetailsList
         selectionMode={SelectionMode.none}
-        items={rooms.map((name) => ({ name, playerCount: "1+" }))}
+        items={rooms.map(({ name, players }) => ({ name, playerCount: players }))}
         columns={[
           {
             key: "c1",
@@ -55,7 +55,7 @@ export const RoomListAtom: React.SFC<Props> = ({ rooms, joinOnlineRoom }) => (
 type Props = OwnProps & StateProps & DispatchProps
 
 type StateProps = {
-  rooms: string[]
+  rooms: Room[]
 }
 type DispatchProps = {
   joinOnlineRoom: typeof actions.joinOnlineRoom

@@ -16,10 +16,12 @@ export type GossipAction = ActionType<typeof gossipActions>
 export const configureGossip = (dispatch: Dispatch<AnyAction>) => {
   const gossipGroup = configureWebGroup()
 
-  const roomListModel = configureMesh(gossipGroup)
+  const gossipDocument = configureMesh(gossipGroup)
 
-  roomListModel.on("update", () => {
-    dispatch(actions.rooms(roomListModel.toJSON()))
+  const rooms = gossipDocument.createSeq("type", "room")
+
+  gossipDocument.on("update", () => {
+    dispatch(actions.rooms(rooms.toJSON()))
   })
 
   gossipGroup.join("gossip")
@@ -29,15 +31,18 @@ export const configureGossip = (dispatch: Dispatch<AnyAction>) => {
       const { name, isHost } = action.payload
 
       if (isHost) {
-        const index = roomListModel.indexOf(name)
-        roomListModel.splice(Number(index), 1) // I have no idea why i need to force the index to be a number
+        const room = rooms.asArray().find((room: any) => room.state.name === name)
+
+        if (room) {
+          rooms.remove(room)
+        }
       }
     }
 
     if (action.type === "createdOnlineRoom") {
       const { name } = action.payload
 
-      roomListModel.push(name)
+      rooms.push(gossipDocument.add({ name, players: 0 }))
     }
   }
 }

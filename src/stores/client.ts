@@ -23,6 +23,11 @@ const meshes = state.tails.map(
 
 export type GameAction = ActionType<typeof actions>
 
+export type Room = {
+  name: string
+  players: number
+}
+
 export type ClientMesh = {
   vertices: Float32Array
   uvs: Float32Array
@@ -48,7 +53,7 @@ export type ClientState = {
   room: RoomState
   tails: { [owner: number]: ClientTail }
   messages: Message[]
-  rooms: string[]
+  rooms: Room[]
   online: boolean
 }
 
