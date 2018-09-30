@@ -1,9 +1,10 @@
+import Doc from "crdt"
 import { AnyAction, Dispatch } from "redux"
 import { ActionType } from "typesafe-actions"
 
 import * as actions from "./actions"
 import { configureMesh } from "./mesh"
-import { configureWebGroup } from "./utils"
+import { configureWebGroup, debounce } from "./utils"
 
 const gossipActions = {
   createdOnlineRoom: actions.createdOnlineRoom,
@@ -16,12 +17,14 @@ export type GossipAction = ActionType<typeof gossipActions>
 export const configureGossip = (dispatch: Dispatch<AnyAction>) => {
   const gossipGroup = configureWebGroup()
 
-  const gossipDocument = configureMesh(gossipGroup)
+  const gossipDocument = configureMesh(gossipGroup, new Doc())
 
   const rooms = gossipDocument.createSeq("type", "room")
 
+  const debouncedUpdate = debounce(() => dispatch(actions.rooms(rooms.toJSON())), 200)
+
   gossipDocument.on("update", () => {
-    dispatch(actions.rooms(rooms.toJSON()))
+    debouncedUpdate()
   })
 
   gossipGroup.join("gossip")

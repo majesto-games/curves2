@@ -51,3 +51,60 @@ export const configureWebGroup = (handlers?: Handlers, options?: WebGroupOptions
 export function supportsWebRTC() {
   return webrtcsupport.supportDataChannel
 }
+
+export function debounce(func: (...args: any[]) => any, wait: number, immediate = false) {
+  let timeout: number | null
+  let args: IArguments | null
+  let context: any
+  let timestamp: number
+  let result: any
+
+  if (null == wait) wait = 100
+
+  function later() {
+    var last = Date.now() - timestamp
+
+    if (last < wait && last >= 0) {
+      timeout = window.setTimeout(later, wait - last)
+    } else {
+      timeout = null
+      if (!immediate) {
+        result = func.apply(context, args)
+        context = args = null
+      }
+    }
+  }
+
+  var debounced = function(this: any) {
+    context = this
+    args = arguments
+    timestamp = Date.now()
+    var callNow = immediate && !timeout
+    if (!timeout) timeout = window.setTimeout(later, wait)
+    if (callNow) {
+      result = func.apply(context, args)
+      context = args = null
+    }
+
+    return result
+  }
+
+  // debounced.clear = function() {
+  //   if (timeout) {
+  //     clearTimeout(timeout);
+  //     timeout = null;
+  //   }
+  // };
+
+  // debounced.flush = function() {
+  //   if (timeout) {
+  //     result = func.apply(context, args);
+  //     context = args = null;
+
+  //     clearTimeout(timeout);
+  //     timeout = null;
+  //   }
+  // };
+
+  return debounced
+}
