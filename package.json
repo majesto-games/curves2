@@ -32,7 +32,7 @@
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "predeploy": "cross-env REACT_APP_BUILD_VERSION=\"$(date +'%Y-%m-%d %H:%M:%S')\" yarn build",
+    "predeploy": "env REACT_APP_BUILD_VERSION=\"$(date +'%Y-%m-%d %H:%M:%S')\" yarn build",
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
@@ -44,7 +44,6 @@
     "@types/react-router-dom": "^4.3.0",
     "@types/react-transition-group": "^2.0.13",
     "@types/redux-logger": "^3.0.6",
-    "cross-env": "^5.2.0",
     "gh-pages": "^1.2.0",
     "typescript": "^3.0.3"
   },
