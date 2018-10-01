@@ -1,4 +1,4 @@
-import { CompoundButton } from "office-ui-fabric-react"
+import { CompoundButton, Spinner } from "office-ui-fabric-react"
 import * as React from "react"
 import { connect } from "react-redux"
 
@@ -13,19 +13,21 @@ export const ButtonsAtom: React.SFC<Props> = ({
   isOffline,
 }) => (
   <div className="HeaderButtons">
-    <CompoundButton
-      disabled={isOffline}
-      primary
-      className={isLoading ? "loading" : ""}
-      iconProps={{ iconName: "Globe" }}
-      text="Create room"
-      secondaryText="Start an online game"
-      onClick={() => {
-        if (!isLoading) {
-          createOnlineRoom()
-        }
-      }}
-    />
+    {isLoading ? (
+      <CompoundButton className="create loading" primary>
+        <Spinner />
+      </CompoundButton>
+    ) : (
+      <CompoundButton
+        className="create"
+        disabled={isOffline}
+        primary
+        iconProps={{ iconName: "Globe" }}
+        text={"Create room"}
+        secondaryText={"Start an online game"}
+        onClick={() => createOnlineRoom()}
+      />
+    )}
     <CompoundButton
       disabled={isOffline}
       iconProps={{ iconName: "DoubleChevronRight8" }}
