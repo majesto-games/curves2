@@ -34,8 +34,12 @@ class SettingsButton extends React.Component<{ disabled?: boolean }, { dialogVis
         <Dialog
           hidden={!this.state.dialogVisible}
           onDismiss={this.toggleDialog}
-          dialogContentProps={{ type: DialogType.normal, title: "Game settings" }}
-          modalProps={{ isDarkOverlay: true }}
+          dialogContentProps={{
+            type: DialogType.normal,
+            title: "Game settings",
+            showCloseButton: false,
+          }}
+          modalProps={{ isDarkOverlay: true, containerClassName: "settingsDialog" }}
         >
           <Slider label="Max rounds" min={1} max={25} step={1} defaultValue={10} />
           <Slider label="Score to reach" min={3} max={40} step={1} defaultValue={20} />

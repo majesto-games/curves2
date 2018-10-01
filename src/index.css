@@ -243,3 +243,21 @@ button {
   justify-content: center;
   padding: 10px;
 }
+
+/* Specificity hack to allow overriding fabric ui styles */
+.settingsDialog.settingsDialog {
+  max-width: initial;
+}
+
+.settingsDialog > div {
+  min-width: 400px;
+}
+
+.settingsDialog.settingsDialog .ms-Dialog-inner {
+  padding: 20px;
+}
+
+.settingsDialog.settingsDialog .ms-Slider-value {
+  margin-right: 0;
+  width: 24px;
+}
