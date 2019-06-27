@@ -101,7 +101,7 @@ const createGroupWhenCreatingLocalRoom: Epic<RootAction, RootAction, ClientState
   action$.pipe(
     filter(isActionOf(actions.createLocalRoom)),
     tap(() => {
-      history.push("/room/" + "local")
+      history.push("/room/local")
     }),
     map(() => {
       const group = new LocalGroup(clientStore.dispatch)

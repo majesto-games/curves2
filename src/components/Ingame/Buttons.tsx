@@ -28,7 +28,7 @@ type DispatchProps = {
 }
 type OwnProps = {}
 
-export const Buttons = connect<StateProps, DispatchProps, OwnProps>(
+export const Buttons = connect(
   (state: ClientState) => ({ isHost: state.room.isHost, roomName: state.room.name }),
   {
     leaveRoom: actions.leaveRoom,

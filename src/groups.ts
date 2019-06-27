@@ -44,8 +44,8 @@ export class LocalGroup {
 }
 
 export class OnlineGroup {
-  private group: WebGroup
-  private hostId: number
+  private group!: WebGroup
+  private hostId!: number
   private leaving = false
 
   constructor(private dispatch: Dispatch) {}
@@ -88,8 +88,8 @@ export class OnlineGroup {
           }
         }
       },
-      onMessage: (id, data: string) => {
-        const msg: GroupAction = JSON.parse(data)
+      onMessage: (id, data) => {
+        const msg: GroupAction = JSON.parse(data as string)
 
         if (msg.type === "isHost") {
           this.hostId = id

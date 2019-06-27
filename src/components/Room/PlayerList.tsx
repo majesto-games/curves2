@@ -63,4 +63,4 @@ export const PlayerListAtom: React.SFC<Props> = ({ state }) => (
   />
 )
 
-export const PlayerList = connect<StateProps, {}, OwnProps>((state: ClientState) => ({ state }))(PlayerListAtom)
+export const PlayerList = connect((state: ClientState) => ({ state }))(PlayerListAtom)

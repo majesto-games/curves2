@@ -5,17 +5,17 @@
   "dependencies": {
     "crdt": "^3.6.4",
     "netflux": "^4.3.0",
-    "office-ui-fabric-react": "^6.61.2",
-    "pixi.js": "^4.8.1",
+    "office-ui-fabric-react": "^7.6.1",
+    "pixi.js": "4.8.8",
     "protobufjs": "^6.8.8",
     "r-array": "^0.5.3",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-    "react-pixi-fiber": "^0.4.9",
-    "react-redux": "^5.0.7",
-    "react-router-dom": "^4.3.1",
-    "react-scripts-ts": "2.17.0",
-    "react-transition-group": "^2.4.0",
+    "react-pixi-fiber": "^0.8.1",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "^3.0.1",
+    "react-transition-group": "^4.1.1",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-observable": "^1.0.0",
@@ -24,26 +24,39 @@
     "sillyname": "^0.1.0",
     "ts-clipboard": "^1.0.16",
     "typedarray-to-buffer": "^3.1.5",
-    "typesafe-actions": "^2.0.4",
+    "typesafe-actions": "^4.4.2",
     "webrtcsupport": "^2.2.0"
   },
   "scripts": {
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
-    "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
     "build:ci": "env REACT_APP_BUILD_VERSION=\"$(date +'%Y-%m-%d %H:%M:%S')\" yarn build"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.1",
-    "@types/node": "^10.9.4",
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.0.10",
     "@types/pixi.js": "^4.8.0",
     "@types/react": "^16.4.13",
     "@types/react-dom": "^16.0.7",
+    "@types/react-redux": "^7.1.0",
     "@types/react-router-dom": "^4.3.0",
     "@types/react-transition-group": "^2.0.13",
     "@types/redux-logger": "^3.0.6",
-    "typescript": "^3.0.3"
+    "typescript": "^3.5.2"
   },
-  "homepage": "https://majesto-games.github.io/curves2"
+  "homepage": "https://majesto-games.github.io/curves2",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }

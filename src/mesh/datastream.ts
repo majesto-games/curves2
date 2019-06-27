@@ -32,9 +32,10 @@ export class DataStream extends Duplex {
     this.once("finish", this.send.bind(this, END_OF_STREAM))
   }
 
-  _read(size: number) {
+  _read(size: number): void {
     if (this.readQueue.length === 0) {
-      return this.once("readable", this._read.bind(this, size))
+      this.once("readable", this._read.bind(this, size))
+      return
     }
 
     while (this.readQueue.length > 0) {
@@ -45,7 +46,7 @@ export class DataStream extends Duplex {
       }
     }
 
-    return true
+    return
   }
 
   _write(chunk: DataType, encoding: "buffer", callback: (error?: Error | null) => void) {

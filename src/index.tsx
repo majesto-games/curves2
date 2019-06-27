@@ -1,6 +1,6 @@
 import "./index.css"
 
-import createHistory from "history/createMemoryHistory"
+import { createMemoryHistory } from "history"
 import { Fabric, loadTheme } from "office-ui-fabric-react"
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons"
 import * as React from "react"
@@ -13,7 +13,7 @@ import { configureGossip } from "./gossip"
 import { configureStore as configureClientStore } from "./stores/client"
 import { theme } from "./theme"
 
-export const history = createHistory()
+export const history = createMemoryHistory()
 
 initializeIcons()
 

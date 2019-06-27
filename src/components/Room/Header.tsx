@@ -30,30 +30,28 @@ export class HeaderAtom extends React.Component<Props, State> {
 
     return (
       <div className="RoomTitle">
-        {room.group &&
-          room.group.online &&
-          name && (
-            <>
-              <span>{room.name}</span>
-              <TooltipHost
-                content={this.state.clipboardButtonClicked ? "Copied to clipboard!" : "Copy to clipboard"}
-                onTooltipToggle={(visible) => this.setState({ clipboardButtonClicked: false })}
-              >
-                <ActionButton
-                  iconProps={{ iconName: "Copy", styles: { root: { color: theme.palette.bodyText } } }}
-                  onClick={() => {
-                    Clipboard.copy(name)
-                    this.setState({ clipboardButtonClicked: true })
-                  }}
-                />
-              </TooltipHost>
-            </>
-          )}
+        {room.group && room.group.online && name && (
+          <>
+            <span>{room.name}</span>
+            <TooltipHost
+              content={this.state.clipboardButtonClicked ? "Copied to clipboard!" : "Copy to clipboard"}
+              onTooltipToggle={(visible) => this.setState({ clipboardButtonClicked: false })}
+            >
+              <ActionButton
+                iconProps={{ iconName: "Copy", styles: { root: { color: theme.palette.bodyText } } }}
+                onClick={() => {
+                  Clipboard.copy(name)
+                  this.setState({ clipboardButtonClicked: true })
+                }}
+              />
+            </TooltipHost>
+          </>
+        )}
       </div>
     )
   }
 }
 
-export const Header = connect<StateProps, {}, OwnProps>((state: ClientState) => ({
+export const Header = connect((state: ClientState) => ({
   room: state.room,
 }))(HeaderAtom)

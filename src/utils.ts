@@ -36,7 +36,8 @@ type Handlers = { [N in HandlerName]?: NonNullable<typeof WebGroup.prototype[N]>
 const setWebGroupEventHandlers = (instance: WebGroup, handlers?: Handlers) => {
   if (handlers) {
     for (const name in handlers) {
-      if (handlers[name]) {
+      if (name in handlers) {
+        //@ts-ignore
         instance[name] = handlers[name]
       }
     }
@@ -46,7 +47,7 @@ const setWebGroupEventHandlers = (instance: WebGroup, handlers?: Handlers) => {
 }
 
 export const configureWebGroup = (handlers?: Handlers, options?: WebGroupOptions) =>
-  setWebGroupEventHandlers(new WebGroup({ signalingServer: "wss://sigver.app.sodapop.se", ...options }), handlers)
+  setWebGroupEventHandlers(new WebGroup(options), handlers)
 
 export function supportsWebRTC() {
   return webrtcsupport.supportDataChannel
@@ -69,7 +70,7 @@ export function debounce(func: (...args: any[]) => any, wait: number, immediate 
     } else {
       timeout = null
       if (!immediate) {
-        result = func.apply(context, args)
+        result = func.apply(context, (args as unknown) as any[])
         context = args = null
       }
     }
@@ -82,7 +83,7 @@ export function debounce(func: (...args: any[]) => any, wait: number, immediate 
     var callNow = immediate && !timeout
     if (!timeout) timeout = window.setTimeout(later, wait)
     if (callNow) {
-      result = func.apply(context, args)
+      result = func.apply(context, (args as unknown) as any[])
       context = args = null
     }
 

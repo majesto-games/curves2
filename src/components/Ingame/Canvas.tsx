@@ -32,6 +32,6 @@ type StateProps = {
 type DispatchProps = {}
 type OwnProps = {}
 
-export const Canvas = connect<StateProps, DispatchProps, OwnProps>((state: ClientState) => ({
-  tails: Object.keys(state.tails).map((k) => state.tails[k]),
+export const Canvas = connect((state: ClientState) => ({
+  tails: Object.keys(state.tails).map((k) => state.tails[(k as unknown) as number]),
 }))(CanvasAtom)

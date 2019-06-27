@@ -91,7 +91,7 @@ type DispatchProps = {
 }
 type OwnProps = {}
 
-export const RoomButtons = connect<StateProps, DispatchProps, OwnProps>(
+export const RoomButtons = connect(
   (state: ClientState) => ({ isHost: state.room.isHost, roomName: state.room.name }),
   { leaveRoom: actions.leaveRoom, addLocalPlayer: actions.addLocalPlayer },
 )(RoomButtonsAtom)

@@ -63,7 +63,7 @@ type DispatchProps = {
 }
 type OwnProps = {}
 
-export const Buttons = connect<StateProps, DispatchProps, OwnProps>(
+export const Buttons = connect(
   (state: ClientState) => ({
     isLoading: isLoading(state),
     isOffline: !state.online,

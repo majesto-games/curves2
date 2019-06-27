@@ -62,7 +62,7 @@ type DispatchProps = {
 }
 type OwnProps = {}
 
-export const RoomList = connect<StateProps, DispatchProps, OwnProps>(
+export const RoomList = connect(
   (state: ClientState) => ({ rooms: state.rooms }),
   { joinOnlineRoom: actions.joinOnlineRoom },
 )(RoomListAtom)

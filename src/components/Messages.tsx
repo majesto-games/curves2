@@ -32,7 +32,7 @@ export const MessagesAtom: React.SFC<Props> = ({ messages, dismissMessage }) => 
   </div>
 )
 
-export const Messages = connect<StateProps, DispatchProps, OwnProps>(
+export const Messages = connect(
   (state: ClientState) => ({
     messages: state.messages,
   }),
