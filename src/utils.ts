@@ -47,7 +47,7 @@ const setWebGroupEventHandlers = (instance: WebGroup, handlers?: Handlers) => {
 }
 
 export const configureWebGroup = (handlers?: Handlers, options?: WebGroupOptions) =>
-  setWebGroupEventHandlers(new WebGroup(options), handlers)
+  setWebGroupEventHandlers(new WebGroup({ signalingServer: "wss://sigver.app.sodapop.se", ...options }), handlers)
 
 export function supportsWebRTC() {
   return webrtcsupport.supportDataChannel
