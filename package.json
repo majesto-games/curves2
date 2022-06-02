@@ -7,7 +7,7 @@
     "netflux": "^4.3.0",
     "office-ui-fabric-react": "^7.6.1",
     "pixi.js": "4.8.8",
-    "protobufjs": "^6.8.8",
+    "protobufjs": "^6.11.3",
     "r-array": "^0.5.3",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
